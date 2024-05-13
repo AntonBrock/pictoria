@@ -8,17 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		4520FAFF2BF1D33C00018ED8 /* PictoriaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FAFE2BF1D33C00018ED8 /* PictoriaApp.swift */; };
-		4520FB012BF1D33C00018ED8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB002BF1D33C00018ED8 /* ContentView.swift */; };
 		4520FB032BF1D33E00018ED8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4520FB022BF1D33E00018ED8 /* Assets.xcassets */; };
 		4520FB062BF1D33E00018ED8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4520FB052BF1D33E00018ED8 /* Preview Assets.xcassets */; };
+		4520FB112BF1D56900018ED8 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4520FB102BF1D56900018ED8 /* Launch Screen.storyboard */; };
+		4520FB132BF1D70D00018ED8 /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB122BF1D70D00018ED8 /* MainScreen.swift */; };
+		4520FB162BF1D78500018ED8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB152BF1D78500018ED8 /* Colors.swift */; };
+		4520FB192BF1D81B00018ED8 /* TabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB182BF1D81B00018ED8 /* TabBar.swift */; };
+		4520FB1C2BF1E5B700018ED8 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB1B2BF1E5B700018ED8 /* Onboarding.swift */; };
+		4520FB1F2BF1F10F00018ED8 /* EditScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB1E2BF1F10F00018ED8 /* EditScreen.swift */; };
+		4520FB212BF2087500018ED8 /* EditPhotoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */; };
+		4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4520FAFB2BF1D33C00018ED8 /* Pictoria.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pictoria.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4520FAFE2BF1D33C00018ED8 /* PictoriaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictoriaApp.swift; sourceTree = "<group>"; };
-		4520FB002BF1D33C00018ED8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		4520FB022BF1D33E00018ED8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4520FB052BF1D33E00018ED8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4520FB102BF1D56900018ED8 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		4520FB122BF1D70D00018ED8 /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
+		4520FB152BF1D78500018ED8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		4520FB182BF1D81B00018ED8 /* TabBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBar.swift; sourceTree = "<group>"; };
+		4520FB1B2BF1E5B700018ED8 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
+		4520FB1E2BF1F10F00018ED8 /* EditScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScreen.swift; sourceTree = "<group>"; };
+		4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPhotoScreen.swift; sourceTree = "<group>"; };
+		4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScreenOnboarding.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +65,12 @@
 		4520FAFD2BF1D33C00018ED8 /* Pictoria */ = {
 			isa = PBXGroup;
 			children = (
+				4520FB142BF1D77D00018ED8 /* Entity */,
 				4520FAFE2BF1D33C00018ED8 /* PictoriaApp.swift */,
-				4520FB002BF1D33C00018ED8 /* ContentView.swift */,
+				4520FB102BF1D56900018ED8 /* Launch Screen.storyboard */,
+				4520FB0C2BF1D52100018ED8 /* Models */,
+				4520FB0D2BF1D53000018ED8 /* Views */,
+				4520FB0E2BF1D53A00018ED8 /* ViewModels */,
 				4520FB022BF1D33E00018ED8 /* Assets.xcassets */,
 				4520FB042BF1D33E00018ED8 /* Preview Content */,
 			);
@@ -65,6 +83,73 @@
 				4520FB052BF1D33E00018ED8 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4520FB0C2BF1D52100018ED8 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4520FB0D2BF1D53000018ED8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB1A2BF1E5AF00018ED8 /* Onboarding */,
+				4520FB172BF1D81100018ED8 /* TabBar */,
+				4520FB0F2BF1D55900018ED8 /* MainScreen */,
+				4520FB1D2BF1F10700018ED8 /* Edit */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4520FB0E2BF1D53A00018ED8 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		4520FB0F2BF1D55900018ED8 /* MainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB122BF1D70D00018ED8 /* MainScreen.swift */,
+			);
+			path = MainScreen;
+			sourceTree = "<group>";
+		};
+		4520FB142BF1D77D00018ED8 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB152BF1D78500018ED8 /* Colors.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		4520FB172BF1D81100018ED8 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB182BF1D81B00018ED8 /* TabBar.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		4520FB1A2BF1E5AF00018ED8 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB1B2BF1E5B700018ED8 /* Onboarding.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		4520FB1D2BF1F10700018ED8 /* Edit */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB1E2BF1F10F00018ED8 /* EditScreen.swift */,
+				4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */,
+				4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */,
+			);
+			path = Edit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +210,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4520FB112BF1D56900018ED8 /* Launch Screen.storyboard in Resources */,
 				4520FB062BF1D33E00018ED8 /* Preview Assets.xcassets in Resources */,
 				4520FB032BF1D33E00018ED8 /* Assets.xcassets in Resources */,
 			);
@@ -137,8 +223,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4520FB012BF1D33C00018ED8 /* ContentView.swift in Sources */,
+				4520FB212BF2087500018ED8 /* EditPhotoScreen.swift in Sources */,
+				4520FB132BF1D70D00018ED8 /* MainScreen.swift in Sources */,
+				4520FB162BF1D78500018ED8 /* Colors.swift in Sources */,
+				4520FB1C2BF1E5B700018ED8 /* Onboarding.swift in Sources */,
 				4520FAFF2BF1D33C00018ED8 /* PictoriaApp.swift in Sources */,
+				4520FB192BF1D81B00018ED8 /* TabBar.swift in Sources */,
+				4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */,
+				4520FB1F2BF1F10F00018ED8 /* EditScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -197,7 +289,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -254,7 +346,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -275,11 +367,16 @@
 				DEVELOPMENT_TEAM = L6QZ8MR9Z8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Pictoria;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "For editing your photo we need get access to your Photo Libary";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -287,9 +384,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pictoria.app.Pictoria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -304,11 +405,16 @@
 				DEVELOPMENT_TEAM = L6QZ8MR9Z8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Pictoria;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "For editing your photo we need get access to your Photo Libary";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
+				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -316,9 +422,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = pictoria.app.Pictoria;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
