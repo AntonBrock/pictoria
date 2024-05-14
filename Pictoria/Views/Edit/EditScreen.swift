@@ -8,11 +8,16 @@
 import SwiftUI
 
 struct EditScreen: View {
+    
+    var didSaveImage: (() -> Void)
+    
     var body: some View {
         VStack {
             HStack {
                 NavigationLink {
-                    EditScreenOnboarding()
+                    EditScreenOnboarding {
+                        didSaveImage()
+                    }
                 } label: {
                     VStack(spacing: 5) {
                         Image("main_screen-edit_ic")

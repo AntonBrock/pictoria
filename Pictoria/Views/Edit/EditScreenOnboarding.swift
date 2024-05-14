@@ -12,7 +12,12 @@ struct EditScreenOnboarding: View {
     
     @State var isEditPhotoScreenPresented: Bool = false
     @State var statusPHPhotoLibrary: PHAuthorizationStatus = .denied
+
+    @State private var isShowingPicker = false
+    @State private var selectedImage: UIImage?
     
+    var didSaveImage: (() -> Void)
+
     var body: some View {
         VStack {
             Image("main_screen_editPhoto_ic")
@@ -30,48 +35,42 @@ struct EditScreenOnboarding: View {
                 .font(.system(size: 17))
                 .padding(.top, 5)
             
-            if statusPHPhotoLibrary == .authorized {
-                NavigationLink(destination: EditPhotoScreen(), isActive: $isEditPhotoScreenPresented) {
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(Colors.deepBlue)
-                            .frame(maxWidth: .infinity, maxHeight: 50)
-                            .overlay {
-                                Text("Open")
-                                    .foregroundColor(.white)
-                            }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 24)
-            } else {
-                NavigationLink(destination: EditPhotoScreen(), isActive: $isEditPhotoScreenPresented) {
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(Colors.deepBlue)
-                            .frame(maxWidth: .infinity, maxHeight: 50)
-                            .overlay {
-                                Text("Open")
-                                    .foregroundColor(.white)
-                            }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 24)
-                    .onTapGesture {
-                        PHPhotoLibrary.requestAuthorization { status in
+            Button {
+                if statusPHPhotoLibrary == .authorized {
+                    isShowingPicker = true
+                } else {
+                    PHPhotoLibrary.requestAuthorization { status in
+                        DispatchQueue.main.async {
                             statusPHPhotoLibrary = status
-                            
-                            switch status {
-                            case .authorized:
-                                self.isEditPhotoScreenPresented = true
-                            case .denied, .restricted:
-                                print("Доступ к фотографиям запрещен или ограничен")
-                            case .notDetermined:
-                                print("Пользователь еще не принял решение о доступе к фотографиям")
-                            @unknown default:
-                                fatalError("Непредвиденное состояние разрешения на доступ к фотографиям")
+                            if status == .authorized {
+                                isShowingPicker = true
+                            } else {
+                                print("Access denied or restricted")
                             }
                         }
                     }
+                }
+            } label: {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Colors.deepBlue)
+                    .frame(maxWidth: .infinity, maxHeight: 50)
+                    .overlay {
+                        Text("Open")
+                            .foregroundColor(.white)
+                    }
             }
-           
+            .padding()
+            .sheet(isPresented: $isShowingPicker) {
+                PhotoPicker(selectedImage: $selectedImage) {
+                    isEditPhotoScreenPresented.toggle()
+                }
+            }
+            
+            NavigationLink(destination: EditPhotoScreen(selectedImage: $selectedImage, didSave: {
+                didSaveImage()
+            }), isActive: $isEditPhotoScreenPresented) {
+                EmptyView()
+            }
             
             Spacer()
         }

@@ -18,6 +18,7 @@
 		4520FB1F2BF1F10F00018ED8 /* EditScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB1E2BF1F10F00018ED8 /* EditScreen.swift */; };
 		4520FB212BF2087500018ED8 /* EditPhotoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */; };
 		4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */; };
+		4520FB252BF2F17300018ED8 /* PhotoPickerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		4520FB1E2BF1F10F00018ED8 /* EditScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScreen.swift; sourceTree = "<group>"; };
 		4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPhotoScreen.swift; sourceTree = "<group>"; };
 		4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScreenOnboarding.swift; sourceTree = "<group>"; };
+		4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerRepresentable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 			isa = PBXGroup;
 			children = (
 				4520FB152BF1D78500018ED8 /* Colors.swift */,
+				4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */,
 			);
 			path = Entity;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				4520FB1C2BF1E5B700018ED8 /* Onboarding.swift in Sources */,
 				4520FAFF2BF1D33C00018ED8 /* PictoriaApp.swift in Sources */,
 				4520FB192BF1D81B00018ED8 /* TabBar.swift in Sources */,
+				4520FB252BF2F17300018ED8 /* PhotoPickerRepresentable.swift in Sources */,
 				4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */,
 				4520FB1F2BF1F10F00018ED8 /* EditScreen.swift in Sources */,
 			);

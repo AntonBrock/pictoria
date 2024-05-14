@@ -11,6 +11,7 @@ class Colors {
     static let gray: Color = Color(hex: "#D6D6D6")
     static let deepBlue: Color = Color(hex: "#415DFF")
     static let lightGray: Color = Color(hex: "#E5E5EA")
+    static let middleGray: Color = Color(hex: "#F6F6F6")
     static let deepGray: Color = Color(hex: "#8C9AAC")
     static let blacker: Color = Color(hex: "#1E2832")
 }

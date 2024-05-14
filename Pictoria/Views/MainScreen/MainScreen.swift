@@ -13,6 +13,8 @@ struct MainScreen: View {
     @State private var opacity: Double = 0
     @State private var showed: Bool = false
     
+    var didSave: (() -> Void)
+    
     var body: some View {
         VStack {
             VStack {
@@ -23,7 +25,9 @@ struct MainScreen: View {
             }
             
             HStack {
-                NavigationLink(destination: EditScreen()) {
+                NavigationLink(destination: EditScreen(didSaveImage: {
+                    didSave()
+                })) {
                     VStack(spacing: 5) {
                         Image("main_screen-edit_ic")
                             .resizable()

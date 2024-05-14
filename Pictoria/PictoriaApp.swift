@@ -32,7 +32,11 @@ struct PictoriaApp: App {
                     VStack {
                         switch selectedTab {
                         case .home:
-                            MainScreen()
+                            MainScreen {
+                                withAnimation {
+                                    selectedTab = .profile
+                                }
+                            }
                         case .profile:
                             Text("Profile")
                         }
