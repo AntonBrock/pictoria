@@ -13,6 +13,7 @@ struct Profile: View {
     @FocusState private var isTextFieldFocused: Bool
     @State var name: String = "Your name"
     
+    @State private var otherParams: [UIImage]?
     @State private var selectedImage: UIImage?
     @State private var showImagePicker: Bool = false
     
@@ -167,7 +168,7 @@ struct Profile: View {
             .padding(.top, 32)
         }
         .sheet(isPresented: $showImagePicker) {
-            PhotoPicker(selectedImage: $selectedImage) {
+            PhotoPicker(selectedImages: $otherParams, selectedImage: $selectedImage, countForSelected: 1) {
                 self.selectedImage = selectedImage
                 
                 saveImageToUserDefaults()

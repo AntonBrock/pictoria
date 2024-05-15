@@ -21,6 +21,8 @@
 		4520FB252BF2F17300018ED8 /* PhotoPickerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */; };
 		4520FB282BF44BD900018ED8 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB272BF44BD900018ED8 /* Profile.swift */; };
 		4520FB2B2BF457B300018ED8 /* Projetcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2A2BF457B300018ED8 /* Projetcs.swift */; };
+		4520FB2E2BF47B9F00018ED8 /* CollageOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2D2BF47B9F00018ED8 /* CollageOnboarding.swift */; };
+		4520FB302BF47FFE00018ED8 /* Collage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2F2BF47FFE00018ED8 /* Collage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerRepresentable.swift; sourceTree = "<group>"; };
 		4520FB272BF44BD900018ED8 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		4520FB2A2BF457B300018ED8 /* Projetcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projetcs.swift; sourceTree = "<group>"; };
+		4520FB2D2BF47B9F00018ED8 /* CollageOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollageOnboarding.swift; sourceTree = "<group>"; };
+		4520FB2F2BF47FFE00018ED8 /* Collage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,7 @@
 		4520FB0D2BF1D53000018ED8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4520FB2C2BF47B9300018ED8 /* Collage */,
 				4520FB292BF457A400018ED8 /* MyProjects */,
 				4520FB262BF44BCF00018ED8 /* Profile */,
 				4520FB1A2BF1E5AF00018ED8 /* Onboarding */,
@@ -177,6 +182,15 @@
 			path = MyProjects;
 			sourceTree = "<group>";
 		};
+		4520FB2C2BF47B9300018ED8 /* Collage */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB2D2BF47B9F00018ED8 /* CollageOnboarding.swift */,
+				4520FB2F2BF47FFE00018ED8 /* Collage.swift */,
+			);
+			name = Collage;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -248,10 +262,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4520FB2E2BF47B9F00018ED8 /* CollageOnboarding.swift in Sources */,
 				4520FB212BF2087500018ED8 /* EditPhotoScreen.swift in Sources */,
 				4520FB282BF44BD900018ED8 /* Profile.swift in Sources */,
 				4520FB132BF1D70D00018ED8 /* MainScreen.swift in Sources */,
 				4520FB162BF1D78500018ED8 /* Colors.swift in Sources */,
+				4520FB302BF47FFE00018ED8 /* Collage.swift in Sources */,
 				4520FB1C2BF1E5B700018ED8 /* Onboarding.swift in Sources */,
 				4520FAFF2BF1D33C00018ED8 /* PictoriaApp.swift in Sources */,
 				4520FB192BF1D81B00018ED8 /* TabBar.swift in Sources */,

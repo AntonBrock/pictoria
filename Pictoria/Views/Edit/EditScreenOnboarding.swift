@@ -13,6 +13,7 @@ struct EditScreenOnboarding: View {
     @State var isEditPhotoScreenPresented: Bool = false
     @State var statusPHPhotoLibrary: PHAuthorizationStatus = .denied
 
+    @State private var otherParams: [UIImage]?
     @State private var isShowingPicker = false
     @State private var selectedImage: UIImage?
     
@@ -61,7 +62,7 @@ struct EditScreenOnboarding: View {
             }
             .padding()
             .sheet(isPresented: $isShowingPicker) {
-                PhotoPicker(selectedImage: $selectedImage) {
+                PhotoPicker(selectedImages: $otherParams, selectedImage: $selectedImage, countForSelected: 1) {
                     isEditPhotoScreenPresented.toggle()
                 }
             }

@@ -27,6 +27,8 @@ struct MainScreen: View {
             HStack {
                 NavigationLink(destination: EditScreen(didSaveImage: {
                     didSave()
+                }, didSaveCollage: {
+                    didSave()
                 })) {
                     VStack(spacing: 5) {
                         Image("main_screen-edit_ic")
