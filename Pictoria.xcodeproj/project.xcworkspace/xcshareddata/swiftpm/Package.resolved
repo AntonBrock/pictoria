@@ -1,0 +1,15 @@
+{
+  "originHash" : "565b72051ddf99f2e920770f5dc97cdf1c94996941b7676b358e7a51c72139e0",
+  "pins" : [
+    {
+      "identity" : "swiftui-custom-textfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/esatgozcu/SwiftUI-Custom-TextField",
+      "state" : {
+        "branch" : "main",
+        "revision" : "39ab56a35a19fe87749769df32f929ec62bcbc6f"
+      }
+    }
+  ],
+  "version" : 3
+}

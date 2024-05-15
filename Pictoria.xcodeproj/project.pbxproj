@@ -23,6 +23,8 @@
 		4520FB2B2BF457B300018ED8 /* Projetcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2A2BF457B300018ED8 /* Projetcs.swift */; };
 		4520FB2E2BF47B9F00018ED8 /* CollageOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2D2BF47B9F00018ED8 /* CollageOnboarding.swift */; };
 		4520FB302BF47FFE00018ED8 /* Collage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2F2BF47FFE00018ED8 /* Collage.swift */; };
+		4520FB332BF4B13400018ED8 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB322BF4B13400018ED8 /* Feedback.swift */; };
+		4520FB362BF4B1B400018ED8 /* CustomTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 4520FB352BF4B1B400018ED8 /* CustomTextField */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,7 @@
 		4520FB2A2BF457B300018ED8 /* Projetcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projetcs.swift; sourceTree = "<group>"; };
 		4520FB2D2BF47B9F00018ED8 /* CollageOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollageOnboarding.swift; sourceTree = "<group>"; };
 		4520FB2F2BF47FFE00018ED8 /* Collage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collage.swift; sourceTree = "<group>"; };
+		4520FB322BF4B13400018ED8 /* Feedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4520FB362BF4B1B400018ED8 /* CustomTextField in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +109,7 @@
 		4520FB0D2BF1D53000018ED8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4520FB312BF4B0E100018ED8 /* Feedback */,
 				4520FB2C2BF47B9300018ED8 /* Collage */,
 				4520FB292BF457A400018ED8 /* MyProjects */,
 				4520FB262BF44BCF00018ED8 /* Profile */,
@@ -191,6 +196,14 @@
 			name = Collage;
 			sourceTree = "<group>";
 		};
+		4520FB312BF4B0E100018ED8 /* Feedback */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB322BF4B13400018ED8 /* Feedback.swift */,
+			);
+			path = Feedback;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -207,6 +220,9 @@
 			dependencies = (
 			);
 			name = Pictoria;
+			packageProductDependencies = (
+				4520FB352BF4B1B400018ED8 /* CustomTextField */,
+			);
 			productName = Pictoria;
 			productReference = 4520FAFB2BF1D33C00018ED8 /* Pictoria.app */;
 			productType = "com.apple.product-type.application";
@@ -235,6 +251,9 @@
 				Base,
 			);
 			mainGroup = 4520FAF22BF1D33C00018ED8;
+			packageReferences = (
+				4520FB342BF4B1B400018ED8 /* XCRemoteSwiftPackageReference "SwiftUI-Custom-TextField" */,
+			);
 			productRefGroup = 4520FAFC2BF1D33C00018ED8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -274,6 +293,7 @@
 				4520FB252BF2F17300018ED8 /* PhotoPickerRepresentable.swift in Sources */,
 				4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */,
 				4520FB1F2BF1F10F00018ED8 /* EditScreen.swift in Sources */,
+				4520FB332BF4B13400018ED8 /* Feedback.swift in Sources */,
 				4520FB2B2BF457B300018ED8 /* Projetcs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -498,6 +518,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4520FB342BF4B1B400018ED8 /* XCRemoteSwiftPackageReference "SwiftUI-Custom-TextField" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/esatgozcu/SwiftUI-Custom-TextField";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4520FB352BF4B1B400018ED8 /* CustomTextField */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4520FB342BF4B1B400018ED8 /* XCRemoteSwiftPackageReference "SwiftUI-Custom-TextField" */;
+			productName = CustomTextField;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4520FAF32BF1D33C00018ED8 /* Project object */;
 }

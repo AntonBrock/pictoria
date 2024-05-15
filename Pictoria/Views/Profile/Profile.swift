@@ -104,7 +104,7 @@ struct Profile: View {
                              }
                     }
                     
-                    NavigationLink(destination: EmptyView(), isActive: $isNeedToOpenFeedbackScreen) {
+                    NavigationLink(destination: Feedback(), isActive: $isNeedToOpenFeedbackScreen) {
                         RoundedRectangle(cornerRadius: 14)
                             .fill(Colors.middleGray)
                             .frame(height: 50)
