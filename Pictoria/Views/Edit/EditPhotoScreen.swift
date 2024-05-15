@@ -248,7 +248,23 @@ struct EditPhotoScreen: View {
                     if let resizedImage = transformedImage.resize(to: aspectRatio) {
                         let roundedImage = resizedImage.roundedImage(withRadius: rounded)
                         if let finalImage = roundedImage {
+                            
                             UIImageWriteToSavedPhotosAlbum(finalImage, nil, nil, nil)
+                            
+                            var images: [UIImage] = []
+
+                            if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
+                                for imageData in userDefaultsImages {
+                                    if let image = UIImage(data: imageData) {
+                                        images.append(image)
+                                    }
+                                }
+                            }
+
+                            images.append(finalImage)
+
+                            let imageDataArray = images.compactMap { $0.pngData() }
+                            UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
                             didSave()
                         }
                     }

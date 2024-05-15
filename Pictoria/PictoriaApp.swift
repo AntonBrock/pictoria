@@ -38,7 +38,7 @@ struct PictoriaApp: App {
                                 }
                             }
                         case .profile:
-                            Text("Profile")
+                            Profile()
                         }
                     }
                 }

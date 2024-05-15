@@ -19,6 +19,8 @@
 		4520FB212BF2087500018ED8 /* EditPhotoScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */; };
 		4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */; };
 		4520FB252BF2F17300018ED8 /* PhotoPickerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */; };
+		4520FB282BF44BD900018ED8 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB272BF44BD900018ED8 /* Profile.swift */; };
+		4520FB2B2BF457B300018ED8 /* Projetcs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FB2A2BF457B300018ED8 /* Projetcs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		4520FB202BF2087500018ED8 /* EditPhotoScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPhotoScreen.swift; sourceTree = "<group>"; };
 		4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditScreenOnboarding.swift; sourceTree = "<group>"; };
 		4520FB242BF2F17300018ED8 /* PhotoPickerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPickerRepresentable.swift; sourceTree = "<group>"; };
+		4520FB272BF44BD900018ED8 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		4520FB2A2BF457B300018ED8 /* Projetcs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Projetcs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +101,8 @@
 		4520FB0D2BF1D53000018ED8 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4520FB292BF457A400018ED8 /* MyProjects */,
+				4520FB262BF44BCF00018ED8 /* Profile */,
 				4520FB1A2BF1E5AF00018ED8 /* Onboarding */,
 				4520FB172BF1D81100018ED8 /* TabBar */,
 				4520FB0F2BF1D55900018ED8 /* MainScreen */,
@@ -153,6 +159,22 @@
 				4520FB222BF2088D00018ED8 /* EditScreenOnboarding.swift */,
 			);
 			path = Edit;
+			sourceTree = "<group>";
+		};
+		4520FB262BF44BCF00018ED8 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB272BF44BD900018ED8 /* Profile.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		4520FB292BF457A400018ED8 /* MyProjects */ = {
+			isa = PBXGroup;
+			children = (
+				4520FB2A2BF457B300018ED8 /* Projetcs.swift */,
+			);
+			path = MyProjects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +249,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4520FB212BF2087500018ED8 /* EditPhotoScreen.swift in Sources */,
+				4520FB282BF44BD900018ED8 /* Profile.swift in Sources */,
 				4520FB132BF1D70D00018ED8 /* MainScreen.swift in Sources */,
 				4520FB162BF1D78500018ED8 /* Colors.swift in Sources */,
 				4520FB1C2BF1E5B700018ED8 /* Onboarding.swift in Sources */,
@@ -235,6 +258,7 @@
 				4520FB252BF2F17300018ED8 /* PhotoPickerRepresentable.swift in Sources */,
 				4520FB232BF2088D00018ED8 /* EditScreenOnboarding.swift in Sources */,
 				4520FB1F2BF1F10F00018ED8 /* EditScreen.swift in Sources */,
+				4520FB2B2BF457B300018ED8 /* Projetcs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
