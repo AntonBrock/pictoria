@@ -43,23 +43,13 @@ struct PhotoPicker: UIViewControllerRepresentable {
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
             
-            
-            guard let provider = results.first?.itemProvider else {
+            guard let firstResult = results.first else {
                 return
             }
             
             let dispatchGroup = DispatchGroup()
-            var images: [UIImage] = []
-            
-            if provider.canLoadObject(ofClass: UIImage.self) {
-                provider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
-                    DispatchQueue.main.async {
-                        self?.parent.selectedImage = image as? UIImage
-                        self?.parent.dismiss()
-                        
-                    }
-                }
-            }
+            var selectedImage: UIImage?
+            var selectedImages: [UIImage] = []
             
             for result in results {
                 dispatchGroup.enter()
@@ -69,7 +59,7 @@ struct PhotoPicker: UIViewControllerRepresentable {
                     provider.loadObject(ofClass: UIImage.self) { image, error in
                         DispatchQueue.main.async {
                             if let image = image as? UIImage {
-                                images.append(image)
+                                selectedImages.append(image)
                             }
                             dispatchGroup.leave()
                         }
@@ -80,7 +70,19 @@ struct PhotoPicker: UIViewControllerRepresentable {
             }
             
             dispatchGroup.notify(queue: .main) {
-                self.parent.selectedImages = images
+                if selectedImages.isEmpty {
+                    // Если не выбрано ни одной фотографии
+                    if let image = firstResult.itemProvider as? UIImage {
+                        self.parent.selectedImage = image
+                    }
+                } else if selectedImages.count == 1 {
+                    // Если выбрана только одна фотография
+                    self.parent.selectedImage = selectedImages.first
+                } else {
+                    // Если выбрано несколько фотографий
+                    self.parent.selectedImages = selectedImages
+                }
+                
                 self.parent.dismiss()
             }
         }

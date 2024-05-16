@@ -12,101 +12,127 @@ struct Collage: View {
     
     @Binding var selectedCollageType: CollageType
     @Binding var selectedImages: [UIImage]
+    
+    @State var isLoading: Bool = false
 
     var didSave: (() -> Void)
     
     var body: some View {
         
         ScrollView(.vertical) {
-            VStack {
-                Text("Your collage")
-                    .foregroundStyle(Colors.blacker)
-                    .font(.system(size: 26, weight: .bold))
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .multilineTextAlignment(.center)
+            ZStack {
                 
-                Text("Click refresh to shuffle the images in the collage")
-                    .foregroundStyle(Colors.blacker)
-                    .font(.system(size: 17, weight: .medium))
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 26)
-                
-                if !selectedImages.isEmpty {
-                    if selectedCollageType == .twoPhoto {
-                        twoCollageLayout()
+                if isLoading {
+                    VStack {
+                        ProgressView()
+                            .foregroundStyle(Colors.deepBlue)
+                            .padding(.bottom, 10)
+                            .padding(.top, 35)
                     }
-                    
-                    if selectedCollageType == .threePhoto {
-                        threeCollageLayout()
-                    }
-                    
-                    if selectedCollageType == .fourPhoto {
-                        fourCollageLayout()
-                    }
-                    
-                    if selectedCollageType == .fivePhoto {
-                        fiveCollageLayout()
-                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .background(.white.opacity(0.5))
+                    .zIndex(9999)
                 }
                 
-                Button {
-                    selectedImages.shuffle()
-                } label: {
-                    Image("collage_refresh_ic")
-                        .resizable()
-                        .frame(width: 44, height: 44)
-                        .padding(.top, 16)
-                }
-                
-                Button {
-                    switch selectedCollageType {
-                    case .twoPhoto:
-                        let renderer = ImageRenderer(content: twoCollageLayout())
+                VStack {
+                    Text("Your collage")
+                        .foregroundStyle(Colors.blacker)
+                        .font(.system(size: 26, weight: .bold))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Click refresh to shuffle the images in the collage")
+                        .foregroundStyle(Colors.blacker)
+                        .font(.system(size: 17, weight: .medium))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 26)
+                    
+                    if !selectedImages.isEmpty {
+                        if selectedCollageType == .twoPhoto {
+                            twoCollageLayout()
+                        }
                         
-                        if let uiImage = renderer.uiImage {
-                            saveToCashImage(uiImage: uiImage)
+                        if selectedCollageType == .threePhoto {
+                            threeCollageLayout()
                         }
-                    case .threePhoto:
-                        let renderer = ImageRenderer(content: threeCollageLayout())
                         
-                        if let uiImage = renderer.uiImage {
-                            saveToCashImage(uiImage: uiImage)
+                        if selectedCollageType == .fourPhoto {
+                            fourCollageLayout()
                         }
-                    case .fourPhoto:
-                        let renderer = ImageRenderer(content: fourCollageLayout())
-                        if let uiImage = renderer.uiImage {
-                            saveToCashImage(uiImage: uiImage)
+                        
+                        if selectedCollageType == .fivePhoto {
+                            fiveCollageLayout()
                         }
-                    case .fivePhoto:
-                        let renderer = ImageRenderer(content: fiveCollageLayout())
-                        if let uiImage = renderer.uiImage {
-                            saveToCashImage(uiImage: uiImage)
-                        }
-                    case .none:
-                        return
                     }
                     
-                    didSave()
+                    Button {
+                        selectedImages.shuffle()
+                    } label: {
+                        Image("collage_refresh_ic")
+                            .resizable()
+                            .frame(width: 44, height: 44)
+                            .padding(.top, 16)
+                    }
                     
-                } label: {
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(Colors.deepBlue)
-                        .frame(maxWidth: .infinity, maxHeight: 50)
-                        .overlay {
-                            Text("Save")
-                                .foregroundColor(.white)
+                    Button {
+                        
+                        withAnimation {
+                            isLoading = true
                         }
+                        
+                        let group = DispatchGroup()
+                        
+                        switch selectedCollageType {
+                        case .twoPhoto:
+                            let renderer = ImageRenderer(content: twoCollageLayout())
+                            if let uiImage = renderer.uiImage {
+                                saveToCashImage(uiImage: uiImage, group: group)
+                            }
+                        case .threePhoto:
+                            let renderer = ImageRenderer(content: threeCollageLayout())
+                            if let uiImage = renderer.uiImage {
+                                saveToCashImage(uiImage: uiImage,  group: group)
+                            }
+                        case .fourPhoto:
+                            let renderer = ImageRenderer(content: fourCollageLayout())
+                            if let uiImage = renderer.uiImage {
+                                saveToCashImage(uiImage: uiImage, group: group)
+                            }
+                        case .fivePhoto:
+                            let renderer = ImageRenderer(content: fiveCollageLayout())
+                            if let uiImage = renderer.uiImage {
+                                saveToCashImage(uiImage: uiImage, group: group)
+                            }
+                        case .none:
+                            return
+                        }
+                        
+                        group.notify(queue: .main) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                didSave()
+                            }
+                        }
+                        
+                    } label: {
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(Colors.deepBlue)
+                            .frame(maxWidth: .infinity, maxHeight: 50)
+                            .overlay {
+                                Text("Save")
+                                    .foregroundColor(.white)
+                            }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                    .padding(.horizontal, 16)
                 }
-                .frame(maxWidth: .infinity, minHeight: 50)
+                .navigationTitle("Collage")
+                .navigationBarTitleDisplayMode(.inline)
+                .padding(.top, 32)
                 .padding(.horizontal, 16)
-            }
-            .navigationTitle("Collage")
-            .navigationBarTitleDisplayMode(.inline)
-            .padding(.top, 32)
-            .padding(.horizontal, 16)
-            .onTapGesture {
-                selectedImages.shuffle()
+                .onTapGesture {
+                    selectedImages.shuffle()
+                }
             }
         }
         .scrollIndicators(.hidden)
@@ -114,23 +140,30 @@ struct Collage: View {
         Spacer()
     }
     
-    private func saveToCashImage(uiImage: UIImage) {
-        var images: [UIImage] = []
-
-        if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
-            for imageData in userDefaultsImages {
-                if let image = UIImage(data: imageData) {
-                    images.append(image)
+    private func saveToCashImage(uiImage: UIImage, group: DispatchGroup) {
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            group.enter()
+            
+            var images: [UIImage] = []
+            
+            if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
+                for imageData in userDefaultsImages {
+                    if let image = UIImage(data: imageData) {
+                        images.append(image)
+                    }
                 }
             }
+            
+            images.append(uiImage)
+            
+            let imageDataArray = images.compactMap { $0.pngData() }
+            UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
+            
+            UIImageWriteToSavedPhotosAlbum(uiImage, nil, nil, nil)
+            
+            group.leave()
         }
-        
-        images.append(uiImage)
-        
-        let imageDataArray = images.compactMap { $0.pngData() }
-        UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
-        
-        UIImageWriteToSavedPhotosAlbum(uiImage, nil, nil, nil)
     }
     
     // MARK: - Collage for Two Photo
