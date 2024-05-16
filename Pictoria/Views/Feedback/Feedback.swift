@@ -55,7 +55,7 @@ struct Feedback: View {
                         .setPlaceHolderText("Name")
                         .setFocusedBorderColorEnable(true)
                         .setFocusedBorderColor(Colors.deepBlue)
-                        .setPlaceHolderTextColor(.red)
+                        .setPlaceHolderTextColor(Colors.deepGray)
                         .setError(errorText: $errorName, error: $isNeedToShowNameError)
                         .setCornerRadius(10)
                         .onChange(of: email) { newValue in
@@ -74,8 +74,8 @@ struct Feedback: View {
                         .setBorderColor(Colors.deepGray)
                         .setPlaceHolderText("Surname")
                         .setFocusedBorderColorEnable(true)
-                        .setPlaceHolderTextColor(Colors.deepBlue)
-                        .setFocusedBorderColor(.red)
+                        .setPlaceHolderTextColor(Colors.deepGray)
+                        .setFocusedBorderColor(Colors.deepBlue)
                         .setError(errorText: $errorSurename, error: $isNeedToShowSurnameError)
                         .setCornerRadius(10)
                         .onChange(of: email) { newValue in
@@ -93,8 +93,8 @@ struct Feedback: View {
                         .setBorderColor(Colors.deepGray)
                         .setPlaceHolderText("E-mail")
                         .setFocusedBorderColorEnable(true)
-                        .setPlaceHolderTextColor(Colors.deepBlue)
-                        .setFocusedBorderColor(.red)
+                        .setPlaceHolderTextColor(Colors.deepGray)
+                        .setFocusedBorderColor(Colors.deepBlue)
                         .setError(errorText: $errorEmail, error: $isNeedToShowEmailError)
                         .setCornerRadius(10)
                         .onChange(of: email) { newValue in
@@ -139,6 +139,7 @@ struct Feedback: View {
                     }
                 }
                 .padding(.top, 40)
+                .padding(.horizontal, 16)
                 
             }
             Spacer()
@@ -172,10 +173,11 @@ struct Feedback: View {
             )
             .padding(.bottom, 28)
             .disabled(!isValidName && !isValidSurname && !isValidEmail)
+            .padding(.horizontal, 16)
             
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 5)
     }
     
     private func isValidMessage(_ message: String) -> Bool {
