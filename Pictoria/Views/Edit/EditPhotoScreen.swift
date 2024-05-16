@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftyCrop
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
@@ -43,16 +44,7 @@ enum AspectRatio: String, CaseIterable, Identifiable {
     }
 }
 
-enum ImageTransformation {
-    case rotateClockwise
-    case rotateCounterClockwise
-    case mirrorHorizontal
-    case mirrorVertical
-    case none
-}
-
 struct EditPhotoScreen: View {
-    
     
     @State var isFilterAndLightsChoosed: Bool = false
     @State var resizeChoosed: Bool = false
@@ -63,7 +55,7 @@ struct EditPhotoScreen: View {
     var didSave: (() -> Void)
     
     // Filters
-    @State private var hue: Double = 0
+    @State private var hue: Double = 0.05
     @State private var saturation: Double = 1.0
     @State private var brightness: Double = 0.0
     
@@ -71,14 +63,27 @@ struct EditPhotoScreen: View {
     @State private var selectedAspectRatio: AspectRatio = .none
     
     // Transformation
-    @State private var selectedTransformation: ImageTransformation = .none
+    @State private var rotationAngle: Angle = .zero
+    @State private var isHorizontalMirrored: Bool = false
+    @State private var isVerticalMirrored: Bool = false
 
     // Corners
-    @State private var rounded: Double = 0
+    @State private var rounded: Double = 0.05
+    
+    // Crop
+    @State private var selectedShape: MaskShape = .square
+    @State private var showImageCropper: Bool = false
+    
+    @State private var cropImageCircular: Bool = false
+    @State private var rotateImage: Bool = true
+    @State private var maxMagnificationScale: CGFloat = 4.0
+    @State private var maskRadius: CGFloat = 130
+    @State private var zoomSensitivity: CGFloat = 1
+
     
     var body: some View {
         GeometryReader { geometry in
-            let availableWidth = geometry.size.width - 32 // padding adjustment
+            let availableWidth = geometry.size.width - 32
             let size = selectedAspectRatio.size(for: availableWidth)
             
             ScrollView(.vertical) {
@@ -90,7 +95,9 @@ struct EditPhotoScreen: View {
                             .frame(width: size.width, height: size.height)
                             .cornerRadius(rounded)
                             .clipped()
-                            .applyTransformation(selectedTransformation)
+                            .rotationEffect(rotationAngle)
+                            .scaleEffect(x: isHorizontalMirrored ? -1 : 1, y: 1)
+                            .scaleEffect(y: isVerticalMirrored ? -1 : 1)
                             .padding(.top, 32)
                             .padding(.horizontal, 16)
                     }
@@ -104,7 +111,7 @@ struct EditPhotoScreen: View {
                         transform()
                     } else if cornersChoosed {
                         corners()
-                    } else {
+                    }  else {
                         GeometryReader { geometry in
                             ScrollView(.horizontal) {
                                 HStack(spacing: 16) {
@@ -150,6 +157,27 @@ struct EditPhotoScreen: View {
                                     }
                                     .onTapGesture {
                                         resizeChoosed = true
+                                    }
+                                    
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("crop_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                        
+                                        Text("Crop")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        showImageCropper = true
                                     }
                                     
                                     // 4
@@ -214,8 +242,10 @@ struct EditPhotoScreen: View {
                         .frame(width: 44, height: 44)
                         .onTapGesture {
                             selectedAspectRatio = .none
-                            selectedTransformation = .none
                             rounded = 0
+                            rotationAngle = .zero
+                            isVerticalMirrored = false
+                            isHorizontalMirrored = false
                             
                             transformChoosed = false
                             resizeChoosed = false
@@ -229,7 +259,6 @@ struct EditPhotoScreen: View {
                         .resizable()
                         .frame(width: 44, height: 44)
                         .onTapGesture {
-                            
                             transformChoosed = false
                             resizeChoosed = false
                             isFilterAndLightsChoosed = false
@@ -243,7 +272,9 @@ struct EditPhotoScreen: View {
         .navigationBarItems(
             trailing: Button(action: {
                 if let selectedImage = selectedImage,
-                   let transformedImage = selectedImage.applyTransformation(selectedTransformation) {
+                   let transformedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
+                {
+                    
                     let aspectRatio = selectedAspectRatio.size(for: transformedImage.size.width)
                     if let resizedImage = transformedImage.resize(to: aspectRatio) {
                         let roundedImage = resizedImage.roundedImage(withRadius: rounded)
@@ -265,6 +296,7 @@ struct EditPhotoScreen: View {
 
                             let imageDataArray = images.compactMap { $0.pngData() }
                             UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
+                            
                             didSave()
                         }
                     }
@@ -273,6 +305,23 @@ struct EditPhotoScreen: View {
                 Text("Save")
             }
         )
+        .fullScreenCover(isPresented: $showImageCropper) {
+            if let selectedImage = selectedImage {
+                SwiftyCropView(
+                    imageToCrop: selectedImage,
+                    maskShape: selectedShape,
+                    configuration: SwiftyCropConfiguration(
+                        maxMagnificationScale: maxMagnificationScale,
+                        maskRadius: maskRadius,
+                        cropImageCircular: cropImageCircular,
+                        rotateImage: rotateImage,
+                        zoomSensitivity: zoomSensitivity
+                    )
+                ) { croppedImage in
+                    self.selectedImage = croppedImage
+                }
+            }
+        }
     }
     
     @ViewBuilder
@@ -295,9 +344,7 @@ struct EditPhotoScreen: View {
                     }
             }
             
-            Slider(value: $hue, in: -1.0...1.0, step: 0.1) {
-                Text("Hue")
-            }
+            CustomSlider(value: $hue) // inRange: -1.0...1.0
             .onChange(of: hue) { _ in applyFilters() }
             .padding(.top, 3)
             
@@ -318,9 +365,7 @@ struct EditPhotoScreen: View {
                     }
             }
             
-            Slider(value: $saturation, in: -0.0...2.0, step: 0.1) {
-                Text("Saturation")
-            }
+            CustomSlider(value: $saturation) // inRange: -0.0...2.0
             .onChange(of: saturation) { _ in applyFilters() }
             .padding(.top, 3)
 
@@ -341,9 +386,8 @@ struct EditPhotoScreen: View {
                     }
             }
             
-            Slider(value: $brightness, in: -1.0...1.0, step: 0.1) {
-                Text("Lightness")
-            }
+            CustomSlider(value: $brightness) //inRange: -1.0...1.0
+
             .onChange(of: brightness) { _ in applyFilters() }
             .padding(.top, 3)
 
@@ -364,7 +408,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("oneToOne_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .oneToOne ? .white : Colors.deepBlue)
                             
                             Text("1:1")
                                 .font(.system(size: 17, weight: .medium))
@@ -383,7 +429,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("threeToFour_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .threeToFour ? .white : Colors.deepBlue)
                             
                             Text("3:4")
                                 .font(.system(size: 17, weight: .medium))
@@ -402,7 +450,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("fourToThree_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .fourToThree ? .white : Colors.deepBlue)
                             
                             Text("4:3")
                                 .font(.system(size: 17, weight: .medium))
@@ -421,7 +471,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("sixteenToNine_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .sixteenToNine ? .white : Colors.deepBlue)
                             
                             Text("16:9")
                                 .font(.system(size: 17, weight: .medium))
@@ -440,7 +492,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("nineToSixteen_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .nineToSixteen ? .white : Colors.deepBlue)
                             
                             Text("9:16")
                                 .font(.system(size: 17, weight: .medium))
@@ -459,7 +513,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("twoToThree_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .twoToThree ? .white : Colors.deepBlue)
                             
                             Text("2:3")
                                 .font(.system(size: 17, weight: .medium))
@@ -478,7 +534,9 @@ struct EditPhotoScreen: View {
                         VStack {
                             Image("threeToTwo_ic")
                                 .resizable()
+                                .renderingMode(.template)
                                 .frame(width: 24, height: 24)
+                                .foregroundStyle(selectedAspectRatio == .threeToTwo ? .white : Colors.deepBlue)
                             
                             Text("3:2")
                                 .font(.system(size: 17, weight: .medium))
@@ -512,7 +570,9 @@ struct EditPhotoScreen: View {
                     }
                 }
                 .onTapGesture {
-                    selectedTransformation = .rotateClockwise
+                    withAnimation {
+                        rotationAngle += .degrees(-90)
+                    }
                 }
             
             // 2
@@ -528,7 +588,9 @@ struct EditPhotoScreen: View {
                     }
                 }
                 .onTapGesture {
-                    selectedTransformation = .rotateCounterClockwise
+                    withAnimation {
+                        rotationAngle += .degrees(90)
+                    }
                 }
             
             // 3
@@ -543,7 +605,7 @@ struct EditPhotoScreen: View {
                     }
                 }
                 .onTapGesture {
-                    selectedTransformation = .mirrorHorizontal
+                    isHorizontalMirrored.toggle()
                 }
             
             // 4
@@ -558,7 +620,7 @@ struct EditPhotoScreen: View {
                     }
                 }
                 .onTapGesture {
-                    selectedTransformation = .mirrorVertical
+                    isVerticalMirrored.toggle()
                 }
             
         }
@@ -587,9 +649,10 @@ struct EditPhotoScreen: View {
                     }
             }
             
-            Slider(value: $rounded, in: 0...100, step: 0.5) {
-                Text("Corners")
-            }
+            CustomSlider(value: $rounded) //inRange: 0...100
+                .onChange(of: rounded) { newValue in
+                    self.rounded = newValue
+                }
             .padding(.top, 3)
         }
         .padding(.horizontal, 16)
@@ -619,31 +682,31 @@ struct EditPhotoScreen: View {
     }
 }
 
-#warning("TODO: Вынести в другой файл")
-extension View {
-    func applyTransformation(_ transformation: ImageTransformation?) -> some View {
-        var transform: CGAffineTransform = .identity
-        
-        if let transformation = transformation {
-            switch transformation {
-            case .rotateClockwise:
-                transform = transform.rotated(by: .pi / 2)
-            case .rotateCounterClockwise:
-                transform = transform.rotated(by: -.pi / 2)
-            case .mirrorHorizontal:
-                transform = transform.scaledBy(x: -1, y: 1)
-            case .mirrorVertical:
-                transform = transform.scaledBy(x: 1, y: -1)
-            case .none: transform = .identity
-            }
-        }
-    
-        return self
-            .rotationEffect(Angle(radians: transform.rotationAngle))
-            .scaleEffect(x: transform.scaleX, y: transform.scaleY)
-    }
-}
+//extension View {
+//    func applyTransformation(_ transformation: ImageTransformation?) -> some View {
+//        var transform: CGAffineTransform = .identity
+//        
+//        if let transformation = transformation {
+//            switch transformation {
+//            case .rotateClockwise:
+//                transform = transform.rotated(by: .pi / 2)
+//            case .rotateCounterClockwise:
+//                transform = transform.rotated(by: -.pi / 2)
+//            case .mirrorHorizontal:
+//                transform = transform.scaledBy(x: -1, y: 1)
+//            case .mirrorVertical:
+//                transform = transform.scaledBy(x: 1, y: -1)
+//            case .none: transform = .identity
+//            }
+//        }
+//    
+//        return self
+//            .rotationEffect(Angle(radians: transform.rotationAngle))
+//            .scaleEffect(x: transform.scaleX, y: transform.scaleY)
+//    }
+//}
 
+#warning("TODO: Вынести в другой файл")
 extension CGAffineTransform {
     var rotationAngle: CGFloat {
         return atan2(b, a)
@@ -681,50 +744,37 @@ extension UIImage {
         return resizedImage
     }
     
-    func applyTransformation(_ transformation: ImageTransformation?) -> UIImage? {
-        guard let transformation = transformation else {
-            return self
-        }
-        
+    func applyTransformation(_ rotationAngle: Angle,
+                             _ isHorizontalMirrored: Bool,
+                             _ isVerticalMirrored: Bool)
+    -> UIImage? {
         var transform = CGAffineTransform.identity
         var newSize = self.size
         
-        switch transformation {
-        case .rotateClockwise:
-            transform = transform.rotated(by: .pi / 2)
-            newSize = CGSize(width: size.height, height: size.width)
-        case .rotateCounterClockwise:
-            transform = transform.rotated(by: -.pi / 2)
-            newSize = CGSize(width: size.height, height: size.width)
-        case .mirrorHorizontal:
-            transform = transform.scaledBy(x: -1, y: 1)
-        case .mirrorVertical:
-            transform = transform.scaledBy(x: 1, y: -1)
-        case .none:
-            transform = .identity
+        guard let cgImage = self.cgImage else {
+            return nil
         }
         
-        guard let cgImage = self.cgImage else { return nil }
+        let rotationAngle = CGFloat(rotationAngle.radians)
+        transform = transform.rotated(by: rotationAngle)
+        newSize = CGSize(width: size.height, height: size.width)
         
         UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        guard let context = UIGraphicsGetCurrentContext() else {
+            return nil
+        }
         
-        switch transformation {
-        case .rotateClockwise:
+        if isHorizontalMirrored {
             context.translateBy(x: newSize.width, y: 0)
-        case .rotateCounterClockwise:
+        }
+        
+        if isVerticalMirrored {
             context.translateBy(x: 0, y: newSize.height)
-        case .mirrorHorizontal:
-            context.translateBy(x: newSize.width, y: 0)
-        case .mirrorVertical:
-            context.translateBy(x: 0, y: newSize.height)
-        default:
-            break
         }
         
         context.concatenate(transform)
         
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         context.draw(cgImage, in: rect)
         
         let transformedImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -732,4 +782,46 @@ extension UIImage {
         
         return transformedImage
     }
+}
+
+struct CustomSlider: View {
+    @Binding var value: Double
+//    var inRange: ClosedRange<Double>
+
+    var body: some View {
+        VStack {
+            ZStack {
+                // Background track
+                RoundedRectangle(cornerRadius: 16)
+                    .foregroundColor(Colors.middleGray)
+                    .frame(height: 16)
+                
+                // Filled track
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: 16)
+                            .foregroundColor(Colors.deepBlue)
+                            .frame(width: CGFloat(value) * geometry.size.width, height: 16)
+                            .animation(.linear, value: value)
+                        
+                        // Slider circle
+                        Circle()
+                            .foregroundColor(.white)
+                            .frame(width: 12, height: 12)
+                            .offset(x: CGFloat(value) * geometry.size.width - 15, y: 0)
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { gesture in
+                                        let newValue = gesture.location.x / geometry.size.width
+                                        self.value = min(max(0, newValue), 1)
+                                    }
+                            )
+                            .animation(.linear, value: value)
+                    }
+                }
+                .frame(height: 12)
+            }
+        }
+    }
+    
 }

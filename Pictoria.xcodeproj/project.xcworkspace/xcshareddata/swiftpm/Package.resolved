@@ -1,5 +1,5 @@
 {
-  "originHash" : "565b72051ddf99f2e920770f5dc97cdf1c94996941b7676b358e7a51c72139e0",
+  "originHash" : "f38a2cec93be99bf237576a2fc7fa3102d5fcf6f8037d43f0c6e8795a15c90b2",
   "pins" : [
     {
       "identity" : "swiftui-custom-textfield",
@@ -8,6 +8,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "39ab56a35a19fe87749769df32f929ec62bcbc6f"
+      }
+    },
+    {
+      "identity" : "swiftycrop",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/benedom/SwiftyCrop",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4d9d6a2f3d1fbe9802e1c523be3d86c52cd20660"
       }
     }
   ],

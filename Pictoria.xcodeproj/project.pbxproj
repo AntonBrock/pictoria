@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		450B97AD2BF5C5310009F16C /* SwiftyCrop in Frameworks */ = {isa = PBXBuildFile; productRef = 450B97AC2BF5C5310009F16C /* SwiftyCrop */; };
 		4520FAFF2BF1D33C00018ED8 /* PictoriaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520FAFE2BF1D33C00018ED8 /* PictoriaApp.swift */; };
 		4520FB032BF1D33E00018ED8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4520FB022BF1D33E00018ED8 /* Assets.xcassets */; };
 		4520FB062BF1D33E00018ED8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4520FB052BF1D33E00018ED8 /* Preview Assets.xcassets */; };
@@ -53,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				450B97AD2BF5C5310009F16C /* SwiftyCrop in Frameworks */,
 				4520FB362BF4B1B400018ED8 /* CustomTextField in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -222,6 +224,7 @@
 			name = Pictoria;
 			packageProductDependencies = (
 				4520FB352BF4B1B400018ED8 /* CustomTextField */,
+				450B97AC2BF5C5310009F16C /* SwiftyCrop */,
 			);
 			productName = Pictoria;
 			productReference = 4520FAFB2BF1D33C00018ED8 /* Pictoria.app */;
@@ -253,6 +256,7 @@
 			mainGroup = 4520FAF22BF1D33C00018ED8;
 			packageReferences = (
 				4520FB342BF4B1B400018ED8 /* XCRemoteSwiftPackageReference "SwiftUI-Custom-TextField" */,
+				450B97AB2BF5C5310009F16C /* XCRemoteSwiftPackageReference "SwiftyCrop" */,
 			);
 			productRefGroup = 4520FAFC2BF1D33C00018ED8 /* Products */;
 			projectDirPath = "";
@@ -520,6 +524,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		450B97AB2BF5C5310009F16C /* XCRemoteSwiftPackageReference "SwiftyCrop" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/benedom/SwiftyCrop";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		4520FB342BF4B1B400018ED8 /* XCRemoteSwiftPackageReference "SwiftUI-Custom-TextField" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/esatgozcu/SwiftUI-Custom-TextField";
@@ -531,6 +543,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		450B97AC2BF5C5310009F16C /* SwiftyCrop */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 450B97AB2BF5C5310009F16C /* XCRemoteSwiftPackageReference "SwiftyCrop" */;
+			productName = SwiftyCrop;
+		};
 		4520FB352BF4B1B400018ED8 /* CustomTextField */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4520FB342BF4B1B400018ED8 /* XCRemoteSwiftPackageReference "SwiftUI-Custom-TextField" */;

@@ -74,7 +74,7 @@ struct Collage: View {
                             saveToCashImage(uiImage: uiImage)
                         }
                     case .fourPhoto:
-                        let renderer = ImageRenderer(content: threeCollageLayout())
+                        let renderer = ImageRenderer(content: fourCollageLayout())
                         if let uiImage = renderer.uiImage {
                             saveToCashImage(uiImage: uiImage)
                         }
@@ -176,9 +176,9 @@ struct Collage: View {
                             .clipped()
                     }
                 }
-                .frame(width: 350, height: 350)
-                .aspectRatio(contentMode: .fit)
             }
+            .frame(width: 350, height: 350)
+            .aspectRatio(contentMode: .fit)
     }
     
     // MARK: - Collage for Four Photo
@@ -229,9 +229,9 @@ struct Collage: View {
                             .clipped()
                     }
                 }
-                .frame(width: 350, height: 350)
-                .aspectRatio(contentMode: .fit)
             }
+            .frame(width: 350, height: 350)
+            .aspectRatio(contentMode: .fit)
     }
     
     // MARK: - Collage for Five Photo
@@ -298,8 +298,8 @@ struct Collage: View {
                             .frame(width: 200, height: 200)
                     }
                 }
-                .frame(width: 350, height: 350)
-                .aspectRatio(contentMode: .fit)
             }
+            .frame(width: 350, height: 350)
+            .aspectRatio(contentMode: .fit)
     }
 }
