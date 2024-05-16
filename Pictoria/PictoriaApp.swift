@@ -74,8 +74,8 @@ struct PictoriaApp: App {
                             }
                         }
                     }
-                    
                 }
+                .preferredColorScheme(.light)
             }
         }
     }

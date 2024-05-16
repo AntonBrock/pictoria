@@ -29,6 +29,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		450B97AE2BF5F6990009F16C /* Pictoria.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Pictoria.entitlements; sourceTree = "<group>"; };
+		450B97AF2BF5F6DD0009F16C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		4520FAFB2BF1D33C00018ED8 /* Pictoria.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pictoria.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4520FAFE2BF1D33C00018ED8 /* PictoriaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictoriaApp.swift; sourceTree = "<group>"; };
 		4520FB022BF1D33E00018ED8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +83,8 @@
 		4520FAFD2BF1D33C00018ED8 /* Pictoria */ = {
 			isa = PBXGroup;
 			children = (
+				450B97AF2BF5F6DD0009F16C /* Info.plist */,
+				450B97AE2BF5F6990009F16C /* Pictoria.entitlements */,
 				4520FB142BF1D77D00018ED8 /* Entity */,
 				4520FAFE2BF1D33C00018ED8 /* PictoriaApp.swift */,
 				4520FB102BF1D56900018ED8 /* Launch Screen.storyboard */,
@@ -429,12 +433,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Pictoria/Pictoria.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Pictoria/Preview Content\"";
 				DEVELOPMENT_TEAM = L6QZ8MR9Z8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pictoria/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pictoria;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "For editing your photo we need get access to your Photo Libary";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -467,12 +473,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Pictoria/Pictoria.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Pictoria/Preview Content\"";
 				DEVELOPMENT_TEAM = L6QZ8MR9Z8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pictoria/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Pictoria;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "For editing your photo we need get access to your Photo Libary";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
