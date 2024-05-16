@@ -18,6 +18,9 @@ struct PictoriaApp: App {
     @State private var scenario: Scenario = .mainScreen
     @State private var selectedTab: Tab = .home
     @State private var isGuideActive = false
+    
+    @State private var animatedLogo: Bool = false
+    @State private var isHiddenTabBar = false
 
     var body: some Scene {
         WindowGroup {
@@ -32,20 +35,34 @@ struct PictoriaApp: App {
                     VStack {
                         switch selectedTab {
                         case .home:
-                            MainScreen {
+                            MainScreen(showed: $animatedLogo) {
                                 withAnimation {
+                                    isHiddenTabBar = true
+                                }
+                            } didSave: {
+                                withAnimation {
+                                    isHiddenTabBar = false
                                     selectedTab = .profile
                                 }
                             }
                         case .profile:
-                            Profile()
+                            Profile() {
+                                withAnimation {
+                                    isHiddenTabBar = true
+                                }
+                            }
+                        }
+                    }
+                    .onAppear {
+                        withAnimation {
+                            isHiddenTabBar = false
                         }
                     }
                 }
                 .transition(.opacity)
                 .navigationBarTitleDisplayMode(.inline)
                 .overlay(
-                    TabBar(selectedTab: $selectedTab), alignment: .bottom
+                    TabBar(selectedTab: $selectedTab, isHidden: $isHiddenTabBar), alignment: .bottom
                 )
                 .onAppear {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
@@ -57,6 +74,7 @@ struct PictoriaApp: App {
                             }
                         }
                     }
+                    
                 }
             }
         }

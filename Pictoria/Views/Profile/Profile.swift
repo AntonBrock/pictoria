@@ -9,6 +9,8 @@ import SwiftUI
 
 struct Profile: View {
     
+    var hideTabBar: (() -> Void)
+
     @State var isEditingNameMode: Bool = false
     @FocusState private var isTextFieldFocused: Bool
     @State var name: String = "Your name"
@@ -100,6 +102,7 @@ struct Profile: View {
                                  .padding(.vertical, 13)
                              }
                              .onTapGesture {
+                                 hideTabBar()
                                  isNeedToOpenProjects.toggle()
                              }
                     }
@@ -121,6 +124,10 @@ struct Profile: View {
                                 .padding(.leading, 12)
                                 .padding(.vertical, 13)
                             }
+                            .onTapGesture {
+                                hideTabBar()
+                                isNeedToOpenFeedbackScreen.toggle()
+                            }
                     }
                     
                     NavigationLink(destination: EmptyView(), isActive: $isNeedToOpenTermsScreen) {
@@ -139,6 +146,10 @@ struct Profile: View {
                                 }
                                 .padding(.leading, 12)
                                 .padding(.vertical, 13)
+                            }
+                            .onTapGesture {
+                                hideTabBar()
+                                isNeedToOpenTermsScreen.toggle()
                             }
                     }
                     
@@ -159,6 +170,10 @@ struct Profile: View {
                                 .padding(.leading, 12)
                                 .padding(.vertical, 13)
                             }
+                            .onTapGesture {
+                                hideTabBar()
+                                isNeedToOpenPrivacy.toggle()
+                            }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -170,7 +185,6 @@ struct Profile: View {
         .sheet(isPresented: $showImagePicker) {
             PhotoPicker(selectedImages: $otherParams, selectedImage: $selectedImage, countForSelected: 1) {
                 self.selectedImage = selectedImage
-                
                 saveImageToUserDefaults()
             }
         }

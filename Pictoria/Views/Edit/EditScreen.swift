@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditScreen: View {
     
+    var hideTabBar: (() -> Void)
     var didSaveImage: (() -> Void)
     var didSaveCollage: (() -> Void)
     
@@ -59,6 +60,9 @@ struct EditScreen: View {
         }
         .navigationTitle("Edit")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            hideTabBar()
+        }
     }
 }
 

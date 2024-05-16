@@ -15,6 +15,7 @@ enum Tab: String, CaseIterable {
 struct TabBar: View {
     
     @Binding var selectedTab: Tab
+    @Binding var isHidden: Bool
     
     let screenWidth = UIScreen.main.bounds.size.width
     var tabs: [Tab] = [.home, .profile]
@@ -35,37 +36,39 @@ struct TabBar: View {
     ]
     
     var body: some View {
-        VStack {
-            Spacer()
-            
-            HStack {
+        if !isHidden {
+            VStack {
                 Spacer()
                 
-                ForEach(tabs, id: \.self) { tab in
-                    VStack {
-                        Image(tab == selectedTab ? selectedIconNameForTab[tab]! : iconNameForTab[tab]!)
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.1)) {
-                                    selectedTab = tab
-                                }
-                            }
-                        
-                        Text(titleTab[tab]!)
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundStyle(tab == selectedTab ? Colors.deepBlue : Colors.gray)
-                    }
-                    .padding()
-                    
+                HStack {
                     Spacer()
+                    
+                    ForEach(tabs, id: \.self) { tab in
+                        VStack {
+                            Image(tab == selectedTab ? selectedIconNameForTab[tab]! : iconNameForTab[tab]!)
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .onTapGesture {
+                                    withAnimation(.easeInOut(duration: 0.1)) {
+                                        selectedTab = tab
+                                    }
+                                }
+                            
+                            Text(titleTab[tab]!)
+                                .font(.system(size: 10, weight: .medium))
+                                .foregroundStyle(tab == selectedTab ? Colors.deepBlue : Colors.gray)
+                        }
+                        .padding()
+                        
+                        Spacer()
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .padding(.bottom, screenWidth < 375 ? 15 : 45)
+                .padding(.top, -10)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            .padding(.bottom, screenWidth < 375 ? 15 : 45)
-            .padding(.top, -10)
+            .background(.white)
+            .frame(maxWidth: .infinity, maxHeight: 30)
         }
-        .background(.white)
-        .frame(maxWidth: .infinity, maxHeight: 30)
     }
 }

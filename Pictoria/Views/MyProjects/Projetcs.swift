@@ -10,29 +10,50 @@ import SwiftUI
 struct Projetcs: View {
     
     @State var images: [UIImage] = []
+    @State var isLoading: Bool = true
     
     var body: some View {
         ScrollView(.vertical) {
-            if !images.isEmpty {
+            if !images.isEmpty && !isLoading {
                 LazyVGrid(
-                    columns: [GridItem(.flexible(), spacing: 10),
-                              GridItem(.flexible(), spacing: 10),
-                              GridItem(.flexible(), spacing: 10)], spacing: 8)
+                    columns: [GridItem(.fixed(114), spacing: 10),
+                              GridItem(.fixed(114), spacing: 10),
+                              GridItem(.fixed(114), spacing: 10)], spacing: 8)
                 {
                     ForEach(images, id: \.self) { image in
-                        Rectangle()
+                        RoundedRectangle(cornerRadius: 16)
                             .fill(Color.blue)
                             .frame(width: 114, height: 114)
-                            .cornerRadius(16)
                             .overlay(
                                 Image(uiImage: image)
                                     .resizable()
+                                    .frame(width: 114, height: 114)
                                     .scaledToFill()
-                                    .cornerRadius(16)
+                                    .clipped()
+                                    .clipShape(RoundedRectangle(cornerRadius: 16))
                             )
+                        
                     }
                 }
                 .padding(.top, 16)
+            } else if isLoading {
+                VStack {
+                    
+                    ProgressView()
+                        .foregroundStyle(Colors.deepBlue)
+                        .padding(.bottom, 10)
+                        .padding(.top, 35)
+                    
+                    Text("We need a few seconds for loading your projects")
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .font(.system(size: 20, weight: .medium))
+                        .padding(.horizontal, 16)
+                        .foregroundColor(Colors.deepGray)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                    
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
                 VStack {
                     Text("This is where your projects will be. Start editing...")
@@ -59,7 +80,14 @@ struct Projetcs: View {
         .navigationBarTitleDisplayMode(.large)
         .onAppear {
             if let imageDataArray = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
-                self.images = imageDataArray.compactMap { UIImage(data: $0) }
+                DispatchQueue.global().async {
+                    
+                    let uiImages = imageDataArray.compactMap { UIImage(data: $0) }
+                    DispatchQueue.main.async {
+                        self.images = uiImages
+                        self.isLoading = false
+                    }
+                }
             }
         }
     }

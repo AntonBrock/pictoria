@@ -11,8 +11,10 @@ struct MainScreen: View {
     
     @State private var yOffset: CGFloat = 80
     @State private var opacity: Double = 0
-    @State private var showed: Bool = false
     
+    @Binding var showed: Bool
+    
+    var hideTabBar: (() -> Void)
     var didSave: (() -> Void)
     
     var body: some View {
@@ -25,7 +27,9 @@ struct MainScreen: View {
             }
             
             HStack {
-                NavigationLink(destination: EditScreen(didSaveImage: {
+                NavigationLink(destination: EditScreen(hideTabBar: {
+                    hideTabBar()
+                }, didSaveImage: {
                     didSave()
                 }, didSaveCollage: {
                     didSave()
@@ -63,24 +67,34 @@ struct MainScreen: View {
             .opacity(opacity)
             .animation(.easeIn)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    withAnimation(Animation.easeInOut(duration: 0.2)) {
-                        opacity = 1
+                if !showed {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        withAnimation(Animation.easeInOut(duration: 0.2)) {
+                            opacity = 1
+                        }
                     }
+                } else {
+                    opacity = 1
                 }
             }
             .padding(.top, 50)
         }
         .frame(maxWidth: .infinity, alignment: .center)
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                if !showed {
-                    withAnimation(Animation.easeInOut(duration: 0.5)) {
-                        yOffset -= 150
-                        showed = true
+            if !showed {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    if !showed {
+                        withAnimation(Animation.easeInOut(duration: 0.5)) {
+                            yOffset -= 150
+                            showed = true
+                        }
                     }
                 }
+            } else {
+                yOffset = 80
+                yOffset -= 150
             }
+            
         }
     }
 }
