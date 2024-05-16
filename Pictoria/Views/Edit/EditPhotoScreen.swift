@@ -50,8 +50,10 @@ struct EditPhotoScreen: View {
     @State var resizeChoosed: Bool = false
     @State var transformChoosed: Bool = false
     @State var cornersChoosed: Bool = false
+    @State var isLoading: Bool = false
     
     @Binding var selectedImage: UIImage?
+
     var didSave: (() -> Void)
     
     // Filters
@@ -80,246 +82,266 @@ struct EditPhotoScreen: View {
     @State private var maskRadius: CGFloat = 130
     @State private var zoomSensitivity: CGFloat = 1
 
-    
     var body: some View {
-        GeometryReader { geometry in
-            let availableWidth = geometry.size.width - 32
-            let size = selectedAspectRatio.size(for: availableWidth)
-            
-            ScrollView(.vertical) {
-                VStack {
-                    ZStack {
-                        Image(uiImage: selectedImage ?? UIImage())
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: size.width, height: size.height)
-                            .cornerRadius(rounded)
-                            .clipped()
-                            .rotationEffect(rotationAngle)
-                            .scaleEffect(x: isHorizontalMirrored ? -1 : 1, y: 1)
-                            .scaleEffect(y: isVerticalMirrored ? -1 : 1)
-                            .padding(.top, 32)
-                            .padding(.horizontal, 16)
-                    }
-                    .frame(width: geometry.size.width)
-                    .clipped()
-                    if isFilterAndLightsChoosed {
-                        filltersAndLigh()
-                    } else if resizeChoosed {
-                        resize()
-                    } else if transformChoosed {
-                        transform()
-                    } else if cornersChoosed {
-                        corners()
-                    }  else {
-                        GeometryReader { geometry in
-                            ScrollView(.horizontal) {
-                                HStack(spacing: 16) {
-                                    // 1
-                                    VStack {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .fill(Colors.middleGray)
-                                            .frame(width: 56, height: 56)
-                                            .overlay {
-                                                Image("edit_ic")
-                                                    .resizable()
-                                                    .frame(width: 24, height: 24)
-                                            }
-                                        
-                                        Text("Filter & Lights")
-                                            .foregroundColor(Color.black)
-                                            .font(.system(size: 12, weight: .medium))
-                                            .fixedSize(horizontal: true, vertical: false)
-                                            .padding(.horizontal, 5)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .onTapGesture {
-                                        isFilterAndLightsChoosed = true
-                                    }
-                                    
-                                    // 2
-                                    VStack {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .fill(Colors.middleGray)
-                                            .frame(width: 56, height: 56)
-                                            .overlay {
-                                                Image("resize_ic")
-                                                    .resizable()
-                                                    .frame(width: 24, height: 24)
-                                            }
-                                        
-                                        Text("Resize")
-                                            .foregroundColor(Color.black)
-                                            .font(.system(size: 12, weight: .medium))
-                                            .fixedSize(horizontal: true, vertical: false)
-                                            .padding(.horizontal, 5)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .onTapGesture {
-                                        resizeChoosed = true
-                                    }
-                                    
-                                    VStack {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .fill(Colors.middleGray)
-                                            .frame(width: 56, height: 56)
-                                            .overlay {
-                                                Image("crop_ic")
-                                                    .resizable()
-                                                    .frame(width: 24, height: 24)
-                                            }
-                                        
-                                        Text("Crop")
-                                            .foregroundColor(Color.black)
-                                            .font(.system(size: 12, weight: .medium))
-                                            .fixedSize(horizontal: true, vertical: false)
-                                            .padding(.horizontal, 5)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .onTapGesture {
-                                        showImageCropper = true
-                                    }
-                                    
-                                    // 4
-                                    VStack {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .fill(Colors.middleGray)
-                                            .frame(width: 56, height: 56)
-                                            .overlay {
-                                                Image("transform_ic")
-                                                    .resizable()
-                                                    .frame(width: 24, height: 24)
-                                            }
-                                        
-                                        Text("Transform")
-                                            .foregroundColor(Color.black)
-                                            .font(.system(size: 12, weight: .medium))
-                                            .fixedSize(horizontal: true, vertical: false)
-                                            .padding(.horizontal, 5)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .onTapGesture {
-                                        transformChoosed = true
-                                    }
-                                    
-                                    // 6
-                                    VStack {
-                                        RoundedRectangle(cornerRadius: 14)
-                                            .fill(Colors.middleGray)
-                                            .frame(width: 56, height: 56)
-                                            .overlay {
-                                                Image("corners_ic")
-                                                    .resizable()
-                                                    .frame(width: 24, height: 24)
-                                            }
-                                        
-                                        Text("Corners")
-                                            .foregroundColor(Color.black)
-                                            .font(.system(size: 12, weight: .medium))
-                                            .fixedSize(horizontal: true, vertical: false)
-                                            .padding(.horizontal, 5)
-                                            .multilineTextAlignment(.center)
-                                    }
-                                    .onTapGesture {
-                                        cornersChoosed = true
-                                    }
-                                }
-                                .padding(.top, 16)
-                            }
-                            .scrollIndicators(.hidden)
-                        }
-                        .padding(.horizontal, 16)
-                    }
-                    
-                    Spacer()
-                }
-                .navigationTitle("All Features")
-                .navigationBarTitleDisplayMode(.inline)
+        
+        ZStack {
+            GeometryReader { geometry in
+                let availableWidth = geometry.size.width - 32
+                let size = selectedAspectRatio.size(for: availableWidth)
                 
-                HStack {
-                    Image("cancel_ic")
-                        .resizable()
-                        .frame(width: 44, height: 44)
-                        .onTapGesture {
-                            selectedAspectRatio = .none
-                            rounded = 0
-                            rotationAngle = .zero
-                            isVerticalMirrored = false
-                            isHorizontalMirrored = false
-                            
-                            transformChoosed = false
-                            resizeChoosed = false
-                            isFilterAndLightsChoosed = false
-                            cornersChoosed = false
+                ScrollView(.vertical) {
+                    VStack {
+                        ZStack {
+                            Image(uiImage: selectedImage ?? UIImage())
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: size.width, height: size.height)
+                                .cornerRadius(rounded)
+                                .clipped()
+                                .rotationEffect(rotationAngle)
+                                .scaleEffect(x: isHorizontalMirrored ? -1 : 1, y: 1)
+                                .scaleEffect(y: isVerticalMirrored ? -1 : 1)
+                                .padding(.top, 32)
+                                .padding(.horizontal, 16)
                         }
-                    
-                    Spacer()
-                    
-                    Image("approve_ic")
-                        .resizable()
-                        .frame(width: 44, height: 44)
-                        .onTapGesture {
-                            transformChoosed = false
-                            resizeChoosed = false
-                            isFilterAndLightsChoosed = false
-                            cornersChoosed = false
+                        .frame(width: geometry.size.width)
+                        .clipped()
+                        if isFilterAndLightsChoosed {
+                            filltersAndLigh()
+                        } else if resizeChoosed {
+                            resize()
+                        } else if transformChoosed {
+                            transform()
+                        } else if cornersChoosed {
+                            corners()
+                        }  else {
+                            GeometryReader { geometry in
+                                ScrollView(.horizontal) {
+                                    HStack(spacing: 16) {
+                                        // 1
+                                        VStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("edit_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            Text("Filter & Lights")
+                                                .foregroundColor(Color.black)
+                                                .font(.system(size: 12, weight: .medium))
+                                                .fixedSize(horizontal: true, vertical: false)
+                                                .padding(.horizontal, 5)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .onTapGesture {
+                                            isFilterAndLightsChoosed = true
+                                        }
+                                        
+                                        // 2
+                                        VStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("resize_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            Text("Resize")
+                                                .foregroundColor(Color.black)
+                                                .font(.system(size: 12, weight: .medium))
+                                                .fixedSize(horizontal: true, vertical: false)
+                                                .padding(.horizontal, 5)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .onTapGesture {
+                                            resizeChoosed = true
+                                        }
+                                        
+                                        VStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("crop_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            Text("Crop")
+                                                .foregroundColor(Color.black)
+                                                .font(.system(size: 12, weight: .medium))
+                                                .fixedSize(horizontal: true, vertical: false)
+                                                .padding(.horizontal, 5)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .onTapGesture {
+                                            showImageCropper = true
+                                        }
+                                        
+                                        // 4
+                                        VStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("transform_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            Text("Transform")
+                                                .foregroundColor(Color.black)
+                                                .font(.system(size: 12, weight: .medium))
+                                                .fixedSize(horizontal: true, vertical: false)
+                                                .padding(.horizontal, 5)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .onTapGesture {
+                                            transformChoosed = true
+                                        }
+                                        
+                                        // 6
+                                        VStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("corners_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            Text("Corners")
+                                                .foregroundColor(Color.black)
+                                                .font(.system(size: 12, weight: .medium))
+                                                .fixedSize(horizontal: true, vertical: false)
+                                                .padding(.horizontal, 5)
+                                                .multilineTextAlignment(.center)
+                                        }
+                                        .onTapGesture {
+                                            cornersChoosed = true
+                                        }
+                                    }
+                                    .padding(.top, 16)
+                                }
+                                .scrollIndicators(.hidden)
+                            }
+                            .padding(.horizontal, 16)
                         }
+                        
+                        Spacer()
+                    }
+                    .navigationTitle("All Features")
+                    .navigationBarTitleDisplayMode(.inline)
+                    
+                    HStack {
+                        Image("cancel_ic")
+                            .resizable()
+                            .frame(width: 44, height: 44)
+                            .onTapGesture {
+                                selectedAspectRatio = .none
+                                rounded = 0
+                                rotationAngle = .zero
+                                isVerticalMirrored = false
+                                isHorizontalMirrored = false
+                                
+                                transformChoosed = false
+                                resizeChoosed = false
+                                isFilterAndLightsChoosed = false
+                                cornersChoosed = false
+                            }
+                        
+                        Spacer()
+                        
+                        Image("approve_ic")
+                            .resizable()
+                            .frame(width: 44, height: 44)
+                            .onTapGesture {
+                                transformChoosed = false
+                                resizeChoosed = false
+                                isFilterAndLightsChoosed = false
+                                cornersChoosed = false
+                            }
+                    }
+                    .padding(.horizontal, 16)
                 }
-                .padding(.horizontal, 16)
+                .padding(.bottom, 80)
             }
-            .padding(.bottom, 80)
-        }
-        .navigationBarItems(
-            trailing: Button(action: {
-                if let selectedImage = selectedImage,
-                   let transformedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
-                {
+            .navigationBarItems(
+                trailing: Button(action: {
                     
-                    let aspectRatio = selectedAspectRatio.size(for: transformedImage.size.width)
-                    if let resizedImage = transformedImage.resize(to: aspectRatio) {
-                        let roundedImage = resizedImage.roundedImage(withRadius: rounded)
-                        if let finalImage = roundedImage {
-                            
-                            UIImageWriteToSavedPhotosAlbum(finalImage, nil, nil, nil)
-                            
-                            var images: [UIImage] = []
-
-                            if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
-                                for imageData in userDefaultsImages {
-                                    if let image = UIImage(data: imageData) {
-                                        images.append(image)
+                    withAnimation {
+                        isLoading = true
+                    }
+                    
+                    if let selectedImage = selectedImage,
+                       let transformedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
+                    {
+                        
+                        let aspectRatio = selectedAspectRatio.size(for: transformedImage.size.width)
+                        if let resizedImage = transformedImage.resize(to: aspectRatio) {
+                            let roundedImage = resizedImage.roundedImage(withRadius: rounded)
+                            if let finalImage = roundedImage {
+                                
+                                UIImageWriteToSavedPhotosAlbum(finalImage, nil, nil, nil)
+                                
+                                var images: [UIImage] = []
+                                
+                                if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
+                                    for imageData in userDefaultsImages {
+                                        if let image = UIImage(data: imageData) {
+                                            images.append(image)
+                                        }
                                     }
                                 }
+                                
+                                images.append(finalImage)
+                                
+                                let imageDataArray = images.compactMap { $0.pngData() }
+                                UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
+                                
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                                    didSave()
+                                }
                             }
-
-                            images.append(finalImage)
-
-                            let imageDataArray = images.compactMap { $0.pngData() }
-                            UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
-                            
-                            didSave()
                         }
                     }
+                }) {
+                    Text("Save")
                 }
-            }) {
-                Text("Save")
+            )
+            .fullScreenCover(isPresented: $showImageCropper) {
+                if let selectedImage = selectedImage {
+                    SwiftyCropView(
+                        imageToCrop: selectedImage,
+                        maskShape: selectedShape,
+                        configuration: SwiftyCropConfiguration(
+                            maxMagnificationScale: maxMagnificationScale,
+                            maskRadius: maskRadius,
+                            cropImageCircular: cropImageCircular,
+                            rotateImage: rotateImage,
+                            zoomSensitivity: zoomSensitivity
+                        )
+                    ) { croppedImage in
+                        self.selectedImage = croppedImage
+                    }
+                }
             }
-        )
-        .fullScreenCover(isPresented: $showImageCropper) {
-            if let selectedImage = selectedImage {
-                SwiftyCropView(
-                    imageToCrop: selectedImage,
-                    maskShape: selectedShape,
-                    configuration: SwiftyCropConfiguration(
-                        maxMagnificationScale: maxMagnificationScale,
-                        maskRadius: maskRadius,
-                        cropImageCircular: cropImageCircular,
-                        rotateImage: rotateImage,
-                        zoomSensitivity: zoomSensitivity
-                    )
-                ) { croppedImage in
-                    self.selectedImage = croppedImage
+            
+            if isLoading {
+                VStack {
+                    ProgressView()
+                        .foregroundStyle(Colors.deepBlue)
+                        .padding(.bottom, 10)
+                        .padding(.top, 35)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                .background(.white.opacity(0.5))
             }
         }
     }
