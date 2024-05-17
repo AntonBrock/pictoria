@@ -106,6 +106,7 @@ struct EditPhotoScreen: View {
                         }
                         .frame(width: geometry.size.width)
                         .clipped()
+                        
                         if isFilterAndLightsChoosed {
                             filltersAndLigh()
                         } else if resizeChoosed {
@@ -115,160 +116,162 @@ struct EditPhotoScreen: View {
                         } else if cornersChoosed {
                             corners()
                         }  else {
-                            GeometryReader { geometry in
-                                ScrollView(.horizontal) {
-                                    HStack(spacing: 16) {
-                                        // 1
-                                        VStack {
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .fill(Colors.middleGray)
-                                                .frame(width: 56, height: 56)
-                                                .overlay {
-                                                    Image("edit_ic")
-                                                        .resizable()
-                                                        .frame(width: 24, height: 24)
-                                                }
-                                            
-                                            Text("Filter & Lights")
-                                                .foregroundColor(Color.black)
-                                                .font(.system(size: 12, weight: .medium))
-                                                .fixedSize(horizontal: true, vertical: false)
-                                                .padding(.horizontal, 5)
-                                                .multilineTextAlignment(.center)
-                                        }
-                                        .onTapGesture {
-                                            isFilterAndLightsChoosed = true
-                                        }
+                            ScrollView(.horizontal) {
+                                HStack(spacing: 16) {
+                                    // 1
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("edit_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
                                         
-                                        // 2
-                                        VStack {
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .fill(Colors.middleGray)
-                                                .frame(width: 56, height: 56)
-                                                .overlay {
-                                                    Image("resize_ic")
-                                                        .resizable()
-                                                        .frame(width: 24, height: 24)
-                                                }
-                                            
-                                            Text("Resize")
-                                                .foregroundColor(Color.black)
-                                                .font(.system(size: 12, weight: .medium))
-                                                .fixedSize(horizontal: true, vertical: false)
-                                                .padding(.horizontal, 5)
-                                                .multilineTextAlignment(.center)
-                                        }
-                                        .onTapGesture {
-                                            resizeChoosed = true
-                                        }
-                                        
-                                        VStack {
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .fill(Colors.middleGray)
-                                                .frame(width: 56, height: 56)
-                                                .overlay {
-                                                    Image("crop_ic")
-                                                        .resizable()
-                                                        .frame(width: 24, height: 24)
-                                                }
-                                            
-                                            Text("Crop")
-                                                .foregroundColor(Color.black)
-                                                .font(.system(size: 12, weight: .medium))
-                                                .fixedSize(horizontal: true, vertical: false)
-                                                .padding(.horizontal, 5)
-                                                .multilineTextAlignment(.center)
-                                        }
-                                        .onTapGesture {
-                                            showImageCropper = true
-                                        }
-                                        
-                                        // 4
-                                        VStack {
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .fill(Colors.middleGray)
-                                                .frame(width: 56, height: 56)
-                                                .overlay {
-                                                    Image("transform_ic")
-                                                        .resizable()
-                                                        .frame(width: 24, height: 24)
-                                                }
-                                            
-                                            Text("Transform")
-                                                .foregroundColor(Color.black)
-                                                .font(.system(size: 12, weight: .medium))
-                                                .fixedSize(horizontal: true, vertical: false)
-                                                .padding(.horizontal, 5)
-                                                .multilineTextAlignment(.center)
-                                        }
-                                        .onTapGesture {
-                                            transformChoosed = true
-                                        }
-                                        
-                                        // 6
-                                        VStack {
-                                            RoundedRectangle(cornerRadius: 14)
-                                                .fill(Colors.middleGray)
-                                                .frame(width: 56, height: 56)
-                                                .overlay {
-                                                    Image("corners_ic")
-                                                        .resizable()
-                                                        .frame(width: 24, height: 24)
-                                                }
-                                            
-                                            Text("Corners")
-                                                .foregroundColor(Color.black)
-                                                .font(.system(size: 12, weight: .medium))
-                                                .fixedSize(horizontal: true, vertical: false)
-                                                .padding(.horizontal, 5)
-                                                .multilineTextAlignment(.center)
-                                        }
-                                        .onTapGesture {
-                                            cornersChoosed = true
-                                        }
+                                        Text("Filter & Lights")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
                                     }
-                                    .padding(.top, 16)
+                                    .onTapGesture {
+                                        isFilterAndLightsChoosed = true
+                                    }
+                                    
+                                    // 2
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("resize_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                        
+                                        Text("Resize")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        resizeChoosed = true
+                                    }
+                                    
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("crop_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                        
+                                        Text("Crop")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        showImageCropper = true
+                                    }
+                                    
+                                    // 4
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("transform_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                        
+                                        Text("Transform")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        transformChoosed = true
+                                    }
+                                    
+                                    // 6
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("corners_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                        
+                                        Text("Corners")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        cornersChoosed = true
+                                    }
                                 }
-                                .scrollIndicators(.hidden)
+                                .padding(.top, 16)
                             }
+                            .scrollIndicators(.hidden)
+                            .frame(height: 90)
                             .padding(.horizontal, 16)
                         }
+                        
+                        HStack {
+                            Image("cancel_ic")
+                                .resizable()
+                                .frame(width: 44, height: 44)
+                                .onTapGesture {
+                                    selectedAspectRatio = .none
+                                    rounded = 0
+                                    rotationAngle = .zero
+                                    isVerticalMirrored = false
+                                    isHorizontalMirrored = false
+                                    
+                                    transformChoosed = false
+                                    resizeChoosed = false
+                                    isFilterAndLightsChoosed = false
+                                    cornersChoosed = false
+                                }
+                            
+                            Spacer()
+                            
+                            Image("approve_ic")
+                                .resizable()
+                                .frame(width: 44, height: 44)
+                                .onTapGesture {
+                                    transformChoosed = false
+                                    resizeChoosed = false
+                                    isFilterAndLightsChoosed = false
+                                    cornersChoosed = false
+                                }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                        .opacity(isFilterAndLightsChoosed || resizeChoosed || transformChoosed || cornersChoosed ? 1 : 0)
                         
                         Spacer()
                     }
                     .navigationTitle("All Features")
                     .navigationBarTitleDisplayMode(.inline)
                     
-                    HStack {
-                        Image("cancel_ic")
-                            .resizable()
-                            .frame(width: 44, height: 44)
-                            .onTapGesture {
-                                selectedAspectRatio = .none
-                                rounded = 0
-                                rotationAngle = .zero
-                                isVerticalMirrored = false
-                                isHorizontalMirrored = false
-                                
-                                transformChoosed = false
-                                resizeChoosed = false
-                                isFilterAndLightsChoosed = false
-                                cornersChoosed = false
-                            }
-                        
-                        Spacer()
-                        
-                        Image("approve_ic")
-                            .resizable()
-                            .frame(width: 44, height: 44)
-                            .onTapGesture {
-                                transformChoosed = false
-                                resizeChoosed = false
-                                isFilterAndLightsChoosed = false
-                                cornersChoosed = false
-                            }
-                    }
-                    .padding(.horizontal, 16)
                 }
                 .padding(.bottom, 80)
             }
