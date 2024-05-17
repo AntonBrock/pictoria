@@ -57,9 +57,9 @@ struct EditPhotoScreen: View {
     var didSave: (() -> Void)
     
     // Filters
-    @State private var hue: Double = 0.05
-    @State private var saturation: Double = 1.0
-    @State private var brightness: Double = 0.0
+    @State private var hue: Double = 50
+    @State private var saturation: Double = 50
+    @State private var brightness: Double = 50
     
     // Resize
     @State private var selectedAspectRatio: AspectRatio = .none
@@ -70,7 +70,7 @@ struct EditPhotoScreen: View {
     @State private var isVerticalMirrored: Bool = false
 
     // Corners
-    @State private var rounded: Double = 0.05
+    @State private var rounded: Int = 0
     
     // Crop
     @State private var selectedShape: MaskShape = .square
@@ -83,7 +83,6 @@ struct EditPhotoScreen: View {
     @State private var zoomSensitivity: CGFloat = 1
 
     var body: some View {
-        
         ZStack {
             GeometryReader { geometry in
                 let availableWidth = geometry.size.width - 32
@@ -96,8 +95,8 @@ struct EditPhotoScreen: View {
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: size.width, height: size.height)
-                                .cornerRadius(rounded)
                                 .clipped()
+                                .cornerRadius(CGFloat(rounded))
                                 .rotationEffect(rotationAngle)
                                 .scaleEffect(x: isHorizontalMirrored ? -1 : 1, y: 1)
                                 .scaleEffect(y: isVerticalMirrored ? -1 : 1)
@@ -273,7 +272,7 @@ struct EditPhotoScreen: View {
                     .navigationBarTitleDisplayMode(.inline)
                     
                 }
-                .padding(.bottom, 80)
+                .padding(.bottom, 20)
             }
             .navigationBarItems(
                 trailing: Button(action: {
@@ -288,7 +287,7 @@ struct EditPhotoScreen: View {
                         
                         let aspectRatio = selectedAspectRatio.size(for: transformedImage.size.width)
                         if let resizedImage = transformedImage.resize(to: aspectRatio) {
-                            let roundedImage = resizedImage.roundedImage(withRadius: rounded)
+                            let roundedImage = resizedImage.roundedImage(withRadius: CGFloat(rounded))
                             if let finalImage = roundedImage {
                                 
                                 UIImageWriteToSavedPhotosAlbum(finalImage, nil, nil, nil)
@@ -352,72 +351,82 @@ struct EditPhotoScreen: View {
     @ViewBuilder
     private func filltersAndLigh() -> some View {
         VStack {
-            HStack {
-                Text("Hue")
-                    .font(.system(size: 17))
-                    .foregroundStyle(Colors.blacker)
+            
+            VStack {
+                HStack {
+                    Text("Hue")
+                        .font(.system(size: 17))
+                        .foregroundStyle(Colors.blacker)
+                    
+                    Spacer()
+                    
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Colors.middleGray)
+                        .frame(width: 50, height: 16)
+                        .overlay {
+                            Text("\(hue, specifier: "%.2f")")
+                                .font(.system(size: 11))
+                                .foregroundStyle(Colors.deepBlue)
+                        }
+                }
                 
-                Spacer()
-                
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Colors.middleGray)
-                    .frame(width: 30, height: 16)
-                    .overlay {
-                        Text("\(hue, specifier: "%.2f")")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Colors.deepBlue)
-                    }
+                SliderViewWithRange(value: $hue, bounds: 1...100)
+                    .onChange(of: hue) { _ in applyFilters() }
+                    .padding(.top, -5)
             }
+            .padding(.top, 5)
             
-            CustomSlider(value: $hue) // inRange: -1.0...1.0
-            .onChange(of: hue) { _ in applyFilters() }
-            .padding(.top, 3)
-            
-            HStack {
-                Text("Saturation")
-                    .font(.system(size: 17))
-                    .foregroundStyle(Colors.blacker)
+            VStack {
+                HStack {
+                    Text("Saturation")
+                        .font(.system(size: 17))
+                        .foregroundStyle(Colors.blacker)
+                    
+                    Spacer()
+                    
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Colors.middleGray)
+                        .frame(width: 50, height: 16)
+                        .overlay {
+                            Text("\(saturation, specifier: "%.2f")")
+                                .font(.system(size: 11))
+                                .foregroundStyle(Colors.deepBlue)
+                        }
+                }
                 
-                Spacer()
-                
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Colors.middleGray)
-                    .frame(width: 30, height: 16)
-                    .overlay {
-                        Text("\(saturation, specifier: "%.2f")")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Colors.deepBlue)
-                    }
+                SliderViewWithRange(value: $saturation, bounds: 1...100)
+                    .onChange(of: saturation) { _ in applyFilters() }
+                    .padding(.top, -5)
             }
-            
-            CustomSlider(value: $saturation) // inRange: -0.0...2.0
-            .onChange(of: saturation) { _ in applyFilters() }
-            .padding(.top, 3)
+            .padding(.top, 5)
 
-            HStack {
-                Text("Lightness")
-                    .font(.system(size: 17))
-                    .foregroundStyle(Colors.blacker)
+            VStack {
+                HStack {
+                    Text("Lightness")
+                        .font(.system(size: 17))
+                        .foregroundStyle(Colors.blacker)
+                    
+                    Spacer()
+                    
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Colors.middleGray)
+                        .frame(width: 50, height: 16)
+                        .overlay {
+                            Text("\(brightness, specifier: "%.2f")")
+                                .font(.system(size: 11))
+                                .foregroundStyle(Colors.deepBlue)
+                        }
+                }
                 
-                Spacer()
-                
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(Colors.middleGray)
-                    .frame(width: 30, height: 16)
-                    .overlay {
-                        Text("\(brightness, specifier: "%.2f")")
-                            .font(.system(size: 11))
-                            .foregroundStyle(Colors.deepBlue)
-                    }
+                SliderViewWithRange(value: $brightness, bounds: 1...100)
+                    .onChange(of: brightness) { _ in applyFilters() }
+                    .padding(.top, -5)
             }
-            
-            CustomSlider(value: $brightness) //inRange: -1.0...1.0
-
-            .onChange(of: brightness) { _ in applyFilters() }
-            .padding(.top, 3)
+            .padding(.top, 5)
 
         }
         .padding()
+        .padding(.bottom, -10)
     }
     
     @ViewBuilder
@@ -579,7 +588,6 @@ struct EditPhotoScreen: View {
         .padding(.horizontal, 16)
     }
     
-    #warning("TODO: Нужно будет сделать так чтобы при нажатие повторялся эффект а не был 1 раз")
     @ViewBuilder
     private func transform() -> some View {
         HStack(spacing: 8) {
@@ -666,17 +674,19 @@ struct EditPhotoScreen: View {
                 
                 RoundedRectangle(cornerRadius: 14)
                     .fill(Colors.middleGray)
-                    .frame(width: 30, height: 16)
+                    .frame(width: 50, height: 16)
                     .overlay {
-                        Text("\(rounded, specifier: "%.2f")")
+                        Text("\(rounded)")
                             .font(.system(size: 11))
                             .foregroundStyle(Colors.deepBlue)
                     }
             }
             
-            CustomSlider(value: $rounded) //inRange: 0...100
+            CustomSlider(value: $rounded)
                 .onChange(of: rounded) { newValue in
-                    self.rounded = newValue
+                    withAnimation {
+                        self.rounded = newValue
+                    }
                 }
             .padding(.top, 3)
         }
@@ -731,122 +741,3 @@ struct EditPhotoScreen: View {
 //    }
 //}
 
-#warning("TODO: Вынести в другой файл")
-extension CGAffineTransform {
-    var rotationAngle: CGFloat {
-        return atan2(b, a)
-    }
-
-    var scaleX: CGFloat {
-        return sqrt(a * a + c * c)
-    }
-
-    var scaleY: CGFloat {
-        return sqrt(b * b + d * d)
-    }
-}
-
-extension UIImage {
-    func roundedImage(withRadius radius: CGFloat) -> UIImage? {
-        let imageView = UIImageView(image: self)
-        imageView.layer.cornerRadius = radius
-        imageView.layer.masksToBounds = true
-        imageView.layer.borderWidth = 0 // Устанавливаем толщину рамки, если требуется
-        imageView.layer.borderColor = UIColor.clear.cgColor // Устанавливаем цвет рамки, если требуется
-
-        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
-        defer { UIGraphicsEndImageContext() }
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.render(in: context)
-        return UIGraphicsGetImageFromCurrentImageContext()
-    }
-    
-    func resize(to size: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, UIScreen.main.scale)
-        self.draw(in: CGRect(origin: .zero, size: size))
-        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return resizedImage
-    }
-    
-    func applyTransformation(_ rotationAngle: Angle,
-                             _ isHorizontalMirrored: Bool,
-                             _ isVerticalMirrored: Bool)
-    -> UIImage? {
-        var transform = CGAffineTransform.identity
-        var newSize = self.size
-        
-        guard let cgImage = self.cgImage else {
-            return nil
-        }
-        
-        let rotationAngle = CGFloat(rotationAngle.radians)
-        transform = transform.rotated(by: rotationAngle)
-        newSize = CGSize(width: size.height, height: size.width)
-        
-        UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-        
-        if isHorizontalMirrored {
-            context.translateBy(x: newSize.width, y: 0)
-        }
-        
-        if isVerticalMirrored {
-            context.translateBy(x: 0, y: newSize.height)
-        }
-        
-        context.concatenate(transform)
-        
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        context.draw(cgImage, in: rect)
-        
-        let transformedImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return transformedImage
-    }
-}
-
-struct CustomSlider: View {
-    @Binding var value: Double
-//    var inRange: ClosedRange<Double>
-
-    var body: some View {
-        VStack {
-            ZStack {
-                // Background track
-                RoundedRectangle(cornerRadius: 16)
-                    .foregroundColor(Colors.middleGray)
-                    .frame(height: 16)
-                
-                // Filled track
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 16)
-                            .foregroundColor(Colors.deepBlue)
-                            .frame(width: CGFloat(value) * geometry.size.width, height: 16)
-                            .animation(.linear, value: value)
-                        
-                        // Slider circle
-                        Circle()
-                            .foregroundColor(.white)
-                            .frame(width: 12, height: 12)
-                            .offset(x: CGFloat(value) * geometry.size.width - 15, y: 0)
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { gesture in
-                                        let newValue = gesture.location.x / geometry.size.width
-                                        self.value = min(max(0, newValue), 1)
-                                    }
-                            )
-                            .animation(.linear, value: value)
-                    }
-                }
-                .frame(height: 12)
-            }
-        }
-    }
-    
-}
