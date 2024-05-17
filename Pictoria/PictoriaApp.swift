@@ -30,6 +30,7 @@ struct PictoriaApp: App {
                     UserDefaults.standard.setValue(true, forKey: "ShownOnboarding")
                     scenario = .mainScreen
                 })
+                .preferredColorScheme(.light)
             case .mainScreen:
                 NavigationView {
                     VStack {
@@ -65,13 +66,13 @@ struct PictoriaApp: App {
                     TabBar(selectedTab: $selectedTab, isHidden: $isHiddenTabBar), alignment: .bottom
                 )
                 .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        withAnimation {
-                            if UserDefaults.standard.bool(forKey: "ShownOnboarding") {
+                    withAnimation {
+                        if UserDefaults.standard.bool(forKey: "ShownOnboarding") {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                 scenario = .mainScreen
-                            } else {
-                                scenario = .onboarding
                             }
+                        } else {
+                            scenario = .onboarding
                         }
                     }
                 }
