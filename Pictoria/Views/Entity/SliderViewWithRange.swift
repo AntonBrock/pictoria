@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct SliderViewWithRange: View {
+    
     let currentValue: Binding<Double>
     let sliderBounds: ClosedRange<Int>
     
@@ -37,9 +38,10 @@ struct SliderViewWithRange: View {
             ZStack {
                 let sliderBoundDifference = sliderBounds.count
                 let stepWidthInPixel = CGFloat(sliderSize.width) / CGFloat(sliderBoundDifference)
-                
-                
-                let thumbLocation = CGFloat(currentValue.wrappedValue) * stepWidthInPixel
+                                
+                // Calculate relative value and thumb location
+                let relativeValue = (Float(currentValue.wrappedValue) - Float(sliderBounds.lowerBound)) / Float(sliderBounds.upperBound - sliderBounds.lowerBound)
+                let thumbLocation = CGFloat(relativeValue) * sliderSize.width
                 
                 // Path between starting point to thumb
                 lineBetweenThumbs(from: .init(x: sliderViewXCenter, y: sliderViewYCenter), to: .init(x: thumbLocation, y: sliderViewYCenter))
@@ -48,17 +50,17 @@ struct SliderViewWithRange: View {
                 let thumbPoint = CGPoint(x: thumbLocation, y: sliderViewYCenter)
                 thumbView(position: thumbPoint, value: Float(currentValue.wrappedValue))
                     .highPriorityGesture(DragGesture().onChanged { dragValue in
-                        
                         let dragLocation = dragValue.location
-                        let xThumbOffset = min(dragLocation.x, sliderSize.width)
+                        let xThumbOffset = min(max(dragLocation.x, 0), sliderSize.width)
                         
-                        let newValue = Float(sliderBounds.lowerBound / sliderBounds.upperBound) + Float(xThumbOffset / stepWidthInPixel)
-                        if newValue > Float(sliderBounds.lowerBound) && newValue < Float(sliderBounds.upperBound + 1) {
-                            currentValue.wrappedValue = Double(newValue)
-                            sliderViewX = sliderSize.width / 2
-                        }
+                        // Calculate newValue based on drag offset
+                        let newValue = Float(sliderBounds.lowerBound) + Float(xThumbOffset / stepWidthInPixel)
+                        let clampedValue = min(max(newValue, Float(sliderBounds.lowerBound)), Float(sliderBounds.upperBound)) // Clamp value to slider range
+                        currentValue.wrappedValue = Double(clampedValue)
+                        
+                        sliderViewX = sliderSize.width / 2
+                        
                     })
-                
             }
         }
     }
@@ -80,7 +82,7 @@ struct SliderViewWithRange: View {
                 .frame(width: 12, height: 12)
                 .foregroundColor(circleColor)
                 .contentShape(Rectangle())
-                .offset(x: value == 50 ? 0 : position.x < sliderViewX ? 8 : -8, y: 0)
+                .offset(x: value == 0 ? 0 : position.x < sliderViewX ? 8 : -8, y: 0)
         }
         .position(x: position.x, y: position.y)
     }

@@ -52,14 +52,15 @@ struct EditPhotoScreen: View {
     @State var cornersChoosed: Bool = false
     @State var isLoading: Bool = false
     
+    @State var originalImage: UIImage?
     @Binding var selectedImage: UIImage?
 
     var didSave: (() -> Void)
     
     // Filters
-    @State private var hue: Double = 50
-    @State private var saturation: Double = 50
-    @State private var brightness: Double = 50
+    @State private var hue: Double = 0
+    @State private var saturation: Double = 0
+    @State private var brightness: Double = 0
     
     // Resize
     @State private var selectedAspectRatio: AspectRatio = .none
@@ -97,9 +98,6 @@ struct EditPhotoScreen: View {
                                 .frame(width: size.width, height: size.height)
                                 .clipped()
                                 .cornerRadius(CGFloat(rounded))
-                                .rotationEffect(rotationAngle)
-                                .scaleEffect(x: isHorizontalMirrored ? -1 : 1, y: 1)
-                                .scaleEffect(y: isVerticalMirrored ? -1 : 1)
                                 .padding(.top, 32)
                                 .padding(.horizontal, 16)
                         }
@@ -238,16 +236,33 @@ struct EditPhotoScreen: View {
                                 .resizable()
                                 .frame(width: 44, height: 44)
                                 .onTapGesture {
-                                    selectedAspectRatio = .none
-                                    rounded = 0
-                                    rotationAngle = .zero
-                                    isVerticalMirrored = false
-                                    isHorizontalMirrored = false
+                                    if resizeChoosed {
+                                        selectedAspectRatio = .none
+                                    }
+                                    
+                                    if isFilterAndLightsChoosed {
+                                        hue = 0
+                                        brightness = 0
+                                        saturation = 0
+                                    }
+                                    
+                                    if cornersChoosed {
+                                        rounded = 0
+                                    }
+                                    
+                                    if transformChoosed {
+                                        rotationAngle = .zero
+                                        isVerticalMirrored = false
+                                        isHorizontalMirrored = false
+                                    }
                                     
                                     transformChoosed = false
                                     resizeChoosed = false
                                     isFilterAndLightsChoosed = false
                                     cornersChoosed = false
+                                    
+                                    self.selectedImage = self.originalImage
+
                                 }
                             
                             Spacer()
@@ -274,6 +289,21 @@ struct EditPhotoScreen: View {
                 }
                 .padding(.bottom, 20)
             }
+            .onChange(of: rotationAngle) { _ in
+                if let selectedImage = selectedImage {
+                    self.selectedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
+                }
+            }
+            .onChange(of: isHorizontalMirrored) { _ in
+                if let selectedImage = selectedImage {
+                    self.selectedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
+                }
+            }
+            .onChange(of: isVerticalMirrored) { _ in
+                if let selectedImage = selectedImage {
+                    self.selectedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
+                }
+            }
             .navigationBarItems(
                 trailing: Button(action: {
                     
@@ -281,12 +311,14 @@ struct EditPhotoScreen: View {
                         isLoading = true
                     }
                     
-                    if let selectedImage = selectedImage,
-                       let transformedImage = selectedImage.applyTransformation(rotationAngle, isHorizontalMirrored, isVerticalMirrored)
-                    {
+                    if let selectedImage = selectedImage {
+                        print(isHorizontalMirrored)
+                        print(isVerticalMirrored)
+                        print(rotationAngle)
                         
-                        let aspectRatio = selectedAspectRatio.size(for: transformedImage.size.width)
-                        if let resizedImage = transformedImage.resize(to: aspectRatio) {
+                        
+                        let aspectRatio = selectedAspectRatio.size(for: selectedImage.size.width)
+                        if let resizedImage = selectedImage.resize(to: aspectRatio) {
                             let roundedImage = resizedImage.roundedImage(withRadius: CGFloat(rounded))
                             if let finalImage = roundedImage {
                                 
@@ -346,6 +378,9 @@ struct EditPhotoScreen: View {
                 .background(.white.opacity(0.5))
             }
         }
+        .onAppear {
+            self.originalImage = self.selectedImage
+        }
     }
     
     @ViewBuilder
@@ -370,7 +405,7 @@ struct EditPhotoScreen: View {
                         }
                 }
                 
-                SliderViewWithRange(value: $hue, bounds: 1...100)
+                SliderViewWithRange(value: $hue, bounds: Int(-1.0)...Int(1.0))
                     .onChange(of: hue) { _ in applyFilters() }
                     .padding(.top, -5)
             }
@@ -388,14 +423,14 @@ struct EditPhotoScreen: View {
                         .fill(Colors.middleGray)
                         .frame(width: 50, height: 16)
                         .overlay {
-                            Text("\(saturation, specifier: "%.2f")")
+                            Text("\(saturation,  specifier: "%.2f")")
                                 .font(.system(size: 11))
                                 .foregroundStyle(Colors.deepBlue)
                         }
                 }
-                
-                SliderViewWithRange(value: $saturation, bounds: 1...100)
-                    .onChange(of: saturation) { _ in applyFilters() }
+
+                SliderViewWithRange(value: $saturation, bounds: Int(-1.0)...Int(1.0))
+                    .onChange(of: saturation) { _ in applyFilterSaturation() }
                     .padding(.top, -5)
             }
             .padding(.top, 5)
@@ -418,8 +453,8 @@ struct EditPhotoScreen: View {
                         }
                 }
                 
-                SliderViewWithRange(value: $brightness, bounds: 1...100)
-                    .onChange(of: brightness) { _ in applyFilters() }
+                SliderViewWithRange(value: $brightness, bounds: Int(-1.0)...Int(1.0))
+                    .onChange(of: brightness) { _ in applyFiltersBrightness() }
                     .padding(.top, -5)
             }
             .padding(.top, 5)
@@ -701,9 +736,8 @@ struct EditPhotoScreen: View {
         DispatchQueue.main.async {
             let context = CIContext()
             let filter = CIFilter.colorControls()
+            
             filter.inputImage = inputImage
-            filter.saturation = Float(saturation)
-            filter.brightness = Float(brightness)
             
             let hueAdjust = CIFilter.hueAdjust()
             hueAdjust.inputImage = filter.outputImage
@@ -712,6 +746,49 @@ struct EditPhotoScreen: View {
             guard let outputImage = hueAdjust.outputImage,
                   let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
             
+            self.selectedImage = UIImage(cgImage: cgImage)
+        }
+    }
+    
+    private func applyFilterSaturation() {
+        guard let inputImage = CIImage(image: selectedImage!) else { return }
+        
+        let context = CIContext()
+        let filter = CIFilter.colorControls()
+        
+        filter.inputImage = inputImage
+        
+        // Преобразование насыщенности из диапазона -1.0...1.0 в 0...2
+        let adjustedSaturation = (saturation + 1.0)
+        filter.saturation = Float(adjustedSaturation)
+        
+        guard let outputImage = filter.outputImage,
+              let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
+        
+        DispatchQueue.main.async {
+            self.selectedImage = UIImage(cgImage: cgImage)
+        }
+    }
+    
+    private func applyFiltersBrightness() {
+        guard let inputImage = CIImage(image: selectedImage!) else { return }
+        
+        let context = CIContext()
+        let filter = CIFilter(name: "CIColorControls")
+                
+        filter?.setValue(inputImage, forKey: kCIInputImageKey)
+        
+        let limitedBrightness = min(max(brightness, -0.0500), 0.0500)
+        
+        filter?.setValue(inputImage, forKey: kCIInputImageKey)
+        filter?.setValue(Float(limitedBrightness), forKey: kCIInputBrightnessKey)
+        filter?.setValue(1.0, forKey: kCIInputSaturationKey)
+        filter?.setValue(1.0, forKey: kCIInputContrastKey)
+        
+        guard let outputImage = filter?.outputImage,
+              let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else { return }
+        
+        DispatchQueue.main.async {
             self.selectedImage = UIImage(cgImage: cgImage)
         }
     }

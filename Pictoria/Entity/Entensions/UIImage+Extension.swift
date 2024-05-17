@@ -38,35 +38,32 @@ extension UIImage {
                              _ isHorizontalMirrored: Bool,
                              _ isVerticalMirrored: Bool)
     -> UIImage? {
-        var transform = CGAffineTransform.identity
-        var newSize = self.size
         
         guard let cgImage = self.cgImage else {
             return nil
         }
         
-        let rotationAngle = CGFloat(rotationAngle.radians)
-        transform = transform.rotated(by: rotationAngle)
-        newSize = CGSize(width: size.height, height: size.width)
+        let radians = CGFloat(rotationAngle.radians)
         
+        // Вычисляем новый размер с учетом ориентации
+        var newSize = self.size
+        if abs(rotationAngle.degrees).truncatingRemainder(dividingBy: 180) == 90 {
+            newSize = CGSize(width: newSize.height, height: newSize.width)
+        }
+        
+        // Новый контекст для рисования с учетом ориентации и зеркального отражения
         UIGraphicsBeginImageContextWithOptions(newSize, false, self.scale)
         guard let context = UIGraphicsGetCurrentContext() else {
             return nil
         }
         
-        if isHorizontalMirrored {
-            context.translateBy(x: newSize.width, y: 0)
-        }
+        // Применяем преобразования
+        context.translateBy(x: newSize.width / 2, y: newSize.height / 2)
+        context.rotate(by: radians)
+        context.scaleBy(x: isHorizontalMirrored ? -1.0 : 1.0, y: isVerticalMirrored ? -1.0 : 1.0)
+        context.draw(cgImage, in: CGRect(x: -self.size.width / 2, y: -self.size.height / 2, width: self.size.width, height: self.size.height))
         
-        if isVerticalMirrored {
-            context.translateBy(x: 0, y: newSize.height)
-        }
-        
-        context.concatenate(transform)
-        
-        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
-        context.draw(cgImage, in: rect)
-        
+        // Получаем измененное изображение
         let transformedImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
