@@ -83,6 +83,16 @@ struct EditPhotoScreen: View {
     @State private var maskRadius: CGFloat = 130
     @State private var zoomSensitivity: CGFloat = 1
 
+    // Vignette
+    @State private var vignetteChoosed: Bool = false
+//    @State private var vignetteValue: Int = 0
+    
+    @State private var intensity: Int = 1
+//    @State private var radius: Int = 5
+    
+    // Blocked
+    @State private var showAlert: Bool = false
+    
     var body: some View {
         ZStack {
             GeometryReader { geometry in
@@ -112,7 +122,9 @@ struct EditPhotoScreen: View {
                             transform()
                         } else if cornersChoosed {
                             corners()
-                        }  else {
+                        } else if vignetteChoosed {
+                            vignette()
+                        } else {
                             ScrollView(.horizontal) {
                                 HStack(spacing: 16) {
                                     // 1
@@ -223,7 +235,92 @@ struct EditPhotoScreen: View {
                                     .onTapGesture {
                                         cornersChoosed = true
                                     }
+                                    
+                                    // 7
+                                    VStack {
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .fill(Colors.middleGray)
+                                            .frame(width: 56, height: 56)
+                                            .overlay {
+                                                Image("vignette_ic")
+                                                    .resizable()
+                                                    .frame(width: 24, height: 24)
+                                            }
+                                        
+                                        Text("Vignette")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        vignetteChoosed = true
+                                    }
+                                    
+                                    // 8
+                                    VStack {
+                                        
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("text_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            
+                                            Image("lock_ic")
+                                                .resizable()
+                                                .frame(width: 23, height: 23)
+                                                .padding(.top, 35)
+                                                .padding(.trailing, -40)
+                                        }
+                                        
+                                        Text("Text")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        showAlert.toggle()
+                                    }
+                                    
+                                    // 9
+                                    VStack {
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 14)
+                                                .fill(Colors.middleGray)
+                                                .frame(width: 56, height: 56)
+                                                .overlay {
+                                                    Image("stickers_ic")
+                                                        .resizable()
+                                                        .frame(width: 24, height: 24)
+                                                }
+                                            
+                                            Image("lock_ic")
+                                                .resizable()
+                                                .frame(width: 23, height: 23)
+                                                .padding(.top, 35)
+                                                .padding(.trailing, -40)
+                                        }
+                                        
+                                        Text("Stickers")
+                                            .foregroundColor(Color.black)
+                                            .font(.system(size: 12, weight: .medium))
+                                            .fixedSize(horizontal: true, vertical: false)
+                                            .padding(.horizontal, 5)
+                                            .multilineTextAlignment(.center)
+                                    }
+                                    .onTapGesture {
+                                        showAlert.toggle()
+                                    }
                                 }
+                                
                                 .padding(.top, 16)
                             }
                             .scrollIndicators(.hidden)
@@ -238,6 +335,11 @@ struct EditPhotoScreen: View {
                                 .onTapGesture {
                                     if resizeChoosed {
                                         selectedAspectRatio = .none
+                                    }
+                                    
+                                    if vignetteChoosed {
+//                                        intensity = 0
+                                        intensity = 0
                                     }
                                     
                                     if isFilterAndLightsChoosed {
@@ -260,9 +362,9 @@ struct EditPhotoScreen: View {
                                     resizeChoosed = false
                                     isFilterAndLightsChoosed = false
                                     cornersChoosed = false
+                                    vignetteChoosed = false
                                     
                                     self.selectedImage = self.originalImage
-
                                 }
                             
                             Spacer()
@@ -275,11 +377,12 @@ struct EditPhotoScreen: View {
                                     resizeChoosed = false
                                     isFilterAndLightsChoosed = false
                                     cornersChoosed = false
+                                    vignetteChoosed = false
                                 }
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 16)
-                        .opacity(isFilterAndLightsChoosed || resizeChoosed || transformChoosed || cornersChoosed ? 1 : 0)
+                        .opacity(isFilterAndLightsChoosed || resizeChoosed || transformChoosed || cornersChoosed || vignetteChoosed ? 1 : 0)
                         
                         Spacer()
                     }
@@ -311,36 +414,20 @@ struct EditPhotoScreen: View {
                         isLoading = true
                     }
                     
+                    let group = DispatchGroup()
+                    
                     if let selectedImage = selectedImage {
-                        print(isHorizontalMirrored)
-                        print(isVerticalMirrored)
-                        print(rotationAngle)
-                        
-                        
                         let aspectRatio = selectedAspectRatio.size(for: selectedImage.size.width)
                         if let resizedImage = selectedImage.resize(to: aspectRatio) {
                             let roundedImage = resizedImage.roundedImage(withRadius: CGFloat(rounded))
                             if let finalImage = roundedImage {
                                 
-                                UIImageWriteToSavedPhotosAlbum(finalImage, nil, nil, nil)
+                                saveToCashImage(uiImage: finalImage, group: group)
                                 
-                                var images: [UIImage] = []
-                                
-                                if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
-                                    for imageData in userDefaultsImages {
-                                        if let image = UIImage(data: imageData) {
-                                            images.append(image)
-                                        }
+                                group.notify(queue: .main) {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                        didSave()
                                     }
-                                }
-                                
-                                images.append(finalImage)
-                                
-                                let imageDataArray = images.compactMap { $0.pngData() }
-                                UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
-                                
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                                    didSave()
                                 }
                             }
                         }
@@ -380,6 +467,38 @@ struct EditPhotoScreen: View {
         }
         .onAppear {
             self.originalImage = self.selectedImage
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("New features will be soon!"),
+                message: Text("Thank you for using Pictorial.\nIn the next version we’re realising text and stickers adding."),
+                dismissButton: .default(Text("Okay"))
+            )
+        }
+    }
+    
+    private func saveToCashImage(uiImage: UIImage, group: DispatchGroup) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            group.enter()
+            
+            UIImageWriteToSavedPhotosAlbum(uiImage, nil, nil, nil)
+            
+            var images: [UIImage] = []
+            
+            if let userDefaultsImages = UserDefaults.standard.array(forKey: "ImagesProjects") as? [Data] {
+                for imageData in userDefaultsImages {
+                    if let image = UIImage(data: imageData) {
+                        images.append(image)
+                    }
+                }
+            }
+            
+            images.append(uiImage)
+            
+            let imageDataArray = images.compactMap { $0.pngData() }
+            UserDefaults.standard.set(imageDataArray, forKey: "ImagesProjects")
+            
+            group.leave()
         }
     }
     
@@ -727,6 +846,42 @@ struct EditPhotoScreen: View {
         }
         .padding(.horizontal, 16)
         .padding(.top, 12)
+    }
+    
+    @ViewBuilder
+    private func vignette() -> some View {
+        VStack {
+            HStack {
+                Text("Vignette")
+                    .font(.system(size: 17))
+                    .foregroundStyle(Colors.blacker)
+                
+                Spacer()
+                
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(Colors.middleGray)
+                    .frame(width: 50, height: 16)
+                    .overlay {
+                        Text("\(intensity)")
+                            .font(.system(size: 11))
+                            .foregroundStyle(Colors.deepBlue)
+                    }
+            }
+            
+            CustomSlider(value: $intensity)
+                .onChange(of: intensity) { _ in
+                    guard let originalImage = originalImage else {
+                        return
+                    }
+                    withAnimation {
+                        selectedImage = originalImage
+                        applyVignetteFilter()
+                    }
+                }
+                .padding(.top, -5)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
 
     }
     
@@ -758,7 +913,6 @@ struct EditPhotoScreen: View {
         
         filter.inputImage = inputImage
         
-        // Преобразование насыщенности из диапазона -1.0...1.0 в 0...2
         let adjustedSaturation = (saturation + 1.0)
         filter.saturation = Float(adjustedSaturation)
         
@@ -792,29 +946,32 @@ struct EditPhotoScreen: View {
             self.selectedImage = UIImage(cgImage: cgImage)
         }
     }
+    
+    private func applyVignetteFilter() {
+        guard let originalImage = originalImage else {
+            return
+        }
+        
+        guard let inputImage = CIImage(image: originalImage) else {
+            return
+        }
+        
+        let context = CIContext()
+        let filter = CIFilter.vignette()
+        
+        filter.inputImage = inputImage
+                
+        filter.intensity = Float(intensity / 10)
+        filter.radius = 10
+        
+        guard let outputImage = filter.outputImage,
+              let cgImage = context.createCGImage(outputImage, from: outputImage.extent) else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.selectedImage = UIImage(cgImage: cgImage)
+        }
+    }
 }
-
-//extension View {
-//    func applyTransformation(_ transformation: ImageTransformation?) -> some View {
-//        var transform: CGAffineTransform = .identity
-//        
-//        if let transformation = transformation {
-//            switch transformation {
-//            case .rotateClockwise:
-//                transform = transform.rotated(by: .pi / 2)
-//            case .rotateCounterClockwise:
-//                transform = transform.rotated(by: -.pi / 2)
-//            case .mirrorHorizontal:
-//                transform = transform.scaledBy(x: -1, y: 1)
-//            case .mirrorVertical:
-//                transform = transform.scaledBy(x: 1, y: -1)
-//            case .none: transform = .identity
-//            }
-//        }
-//    
-//        return self
-//            .rotationEffect(Angle(radians: transform.rotationAngle))
-//            .scaleEffect(x: transform.scaleX, y: transform.scaleY)
-//    }
-//}
 
