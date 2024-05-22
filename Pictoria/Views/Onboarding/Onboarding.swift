@@ -159,7 +159,7 @@ struct Onboarding: View {
                 VStack {
                     Image("onboarding_draw_ic")
                         .resizable()
-                        .frame(width: 300, height: 120)
+                        .frame(width: 135, height: 120)
                         .padding(.top, 12)
                     
                     VStack {
@@ -192,7 +192,7 @@ struct Onboarding: View {
                 VStack {
                     Image("onboarding_transform_ic")
                         .resizable()
-                        .frame(width: 300, height: 120)
+                        .frame(width: 135, height: 120)
                         .padding(.top, 12)
                     
                     VStack {
@@ -258,7 +258,7 @@ struct Onboarding: View {
                 VStack {
                     Image("onboarding_resize_ic")
                         .resizable()
-                        .frame(width: 120, height: 120)
+                        .frame(width: 137, height: 120)
                         .padding(.top, 12)
                     
                     VStack {
