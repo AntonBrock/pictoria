@@ -64,7 +64,7 @@ struct Onboarding: View {
                         .padding(.top, 12)
                     
                     VStack {
-                        Text("Text.")
+                        Text("Soon: Text.")
                             .foregroundColor(Colors.blacker)
                             .font(.system(size: 14, weight: .bold))
                         + Text(" Include text on your photos using a range of fonts, sizes, and colors. Generate captions, quotes, or memes to communicate your message to a larger audience.")
@@ -97,7 +97,7 @@ struct Onboarding: View {
                         .padding(.top, 12)
                     
                     VStack {
-                        Text("Corners.")
+                        Text("Corners&Vignette.")
                             .foregroundColor(Colors.blacker)
                             .font(.system(size: 14, weight: .bold))
                         + Text(" Give your photos a distinct look by rounding or sharpening their corners. Opt for a soft, rounded edge to achieve a vintage appearance, or keep them sharp for a modern vibe.")
@@ -130,7 +130,7 @@ struct Onboarding: View {
                         .padding(.top, 12)
                     
                     VStack {
-                        Text("Stickers.")
+                        Text("Soon: Stickers.")
                             .foregroundColor(Colors.blacker)
                             .font(.system(size: 14, weight: .bold))
                         + Text(" Customize your photos using a variety of enjoyable stickers and emojis. Whether it's holiday-themed stickers or emojis, there is an option for every event to add a personal touch.")
@@ -156,15 +156,14 @@ struct Onboarding: View {
                 }
                 
                 // 5
-                #warning("TODO: - Добавить картинка")
                 VStack {
-                    Image("onboarding_stickers_ic")
+                    Image("onboarding_draw_ic")
                         .resizable()
                         .frame(width: 300, height: 120)
                         .padding(.top, 12)
                     
                     VStack {
-                        Text("Draw.")
+                        Text("Soon: Draw.")
                             .foregroundColor(Colors.blacker)
                             .font(.system(size: 14, weight: .bold))
                         + Text(" Showcase your artistic side by sketching directly on your photos using a range of brush styles and colors. Enhance your pictures by adding annotations, highlights, or doodles to give them a unique touch.")
@@ -190,9 +189,8 @@ struct Onboarding: View {
                 }
                 
                 // 6
-                #warning("TODO: - Добавить картинка")
                 VStack {
-                    Image("onboarding_stickers_ic")
+                    Image("onboarding_transform_ic")
                         .resizable()
                         .frame(width: 300, height: 120)
                         .padding(.top, 12)
@@ -257,9 +255,8 @@ struct Onboarding: View {
                 }
                 
                 // 8
-                #warning("TODO: - Добавить картинка")
                 VStack {
-                    Image("onboarding_crop_ic")
+                    Image("onboarding_resize_ic")
                         .resizable()
                         .frame(width: 120, height: 120)
                         .padding(.top, 12)
