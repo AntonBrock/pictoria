@@ -59,6 +59,7 @@ struct Profile: View {
                         }, onCommit: {
                             isEditingNameMode = false
                             isTextFieldFocused = false
+                            
                             UserDefaults.standard.setValue(name, forKey: "UserName")
                         })
                             .frame(maxWidth: 300, alignment: .center)
@@ -73,6 +74,8 @@ struct Profile: View {
                     Button {
                         isEditingNameMode.toggle()
                         isTextFieldFocused.toggle()
+                        
+                        UserDefaults.standard.setValue(name, forKey: "UserName")
                     } label: {
                         Image(isEditingNameMode ? "profile_save_ic" : "profile_edit_ic")
                             .resizable()

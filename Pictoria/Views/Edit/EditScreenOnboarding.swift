@@ -17,6 +17,8 @@ struct EditScreenOnboarding: View {
     @State private var isShowingPicker = false
     @State private var selectedImage: UIImage?
     
+    @State private var showDeniedAccess: Bool = false
+    
     var didSaveImage: (() -> Void)
 
     var body: some View {
@@ -43,10 +45,11 @@ struct EditScreenOnboarding: View {
                     PHPhotoLibrary.requestAuthorization { status in
                         DispatchQueue.main.async {
                             statusPHPhotoLibrary = status
+                            
                             if status == .authorized {
                                 isShowingPicker = true
                             } else {
-                                print("Access denied or restricted")
+                                showDeniedAccess = true
                             }
                         }
                     }
@@ -81,5 +84,16 @@ struct EditScreenOnboarding: View {
                 statusPHPhotoLibrary = status
             }
         }
+        .alert(isPresented: $showDeniedAccess) {
+            Alert(
+                title: Text("The Pictoria application requests permission to access the photo from the gallery."), 
+                message: Text("Go to the application settings and get access to the desired functions"),
+                dismissButton: .default(
+                    Text("Go to settings")
+                        .font(.system(size: 17, weight: .bold)), action: {
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                    })
+                )
+            }
     }
 }

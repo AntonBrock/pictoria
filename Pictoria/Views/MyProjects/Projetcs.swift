@@ -88,6 +88,8 @@ struct Projetcs: View {
                         self.isLoading = false
                     }
                 }
+            } else {
+                self.isLoading = false
             }
         }
     }

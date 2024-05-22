@@ -338,7 +338,6 @@ struct EditPhotoScreen: View {
                                     }
                                     
                                     if vignetteChoosed {
-//                                        intensity = 0
                                         intensity = 0
                                     }
                                     
