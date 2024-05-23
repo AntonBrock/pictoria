@@ -20,7 +20,9 @@ struct PictoriaApp: App {
     @State private var isGuideActive = false
     
     @State private var animatedLogo: Bool = false
-    @State private var isHiddenTabBar = false
+    @State private var isHiddenTabBar = true
+    
+    @State private var wasShowingTab: Bool = false
 
     var body: some Scene {
         WindowGroup {
@@ -40,6 +42,11 @@ struct PictoriaApp: App {
                                 withAnimation {
                                     isHiddenTabBar = true
                                 }
+                            } showTabBar: {
+                                withAnimation {
+                                    wasShowingTab = true
+                                    isHiddenTabBar = false
+                                }
                             } didSave: {
                                 withAnimation {
                                     isHiddenTabBar = false
@@ -56,7 +63,10 @@ struct PictoriaApp: App {
                     }
                     .onAppear {
                         withAnimation {
-                            isHiddenTabBar = false
+                            if wasShowingTab || !UserDefaults.standard.bool(forKey: "ShownOnboarding")  {
+                                isHiddenTabBar = false
+                                wasShowingTab = true
+                            }
                         }
                     }
                 }
@@ -65,17 +75,6 @@ struct PictoriaApp: App {
                 .overlay(
                     TabBar(selectedTab: $selectedTab, isHidden: $isHiddenTabBar), alignment: .bottom
                 )
-                .onAppear {
-                    withAnimation {
-                        if UserDefaults.standard.bool(forKey: "ShownOnboarding") {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                scenario = .mainScreen
-                            }
-                        } else {
-                            scenario = .onboarding
-                        }
-                    }
-                }
                 .preferredColorScheme(.light)
             }
         }
